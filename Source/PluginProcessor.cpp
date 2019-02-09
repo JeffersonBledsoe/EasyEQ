@@ -176,8 +176,14 @@ void EasyEqAudioProcessor::updateBand (int bandId)
         }
     }
     
-    auto& band1 = equaliser.get<0>();
-    *band1.state = *newCoeffs;
+    if (bandId == 0)    *equaliser.get<0>().state = *newCoeffs;
+    if (bandId == 1)    *equaliser.get<1>().state = *newCoeffs;
+    if (bandId == 2)    *equaliser.get<2>().state = *newCoeffs;
+    if (bandId == 3)    *equaliser.get<3>().state = *newCoeffs;
+    if (bandId == 4)    *equaliser.get<4>().state = *newCoeffs;
+    if (bandId == 5)    *equaliser.get<5>().state = *newCoeffs;
+    if (bandId == 6)    *equaliser.get<6>().state = *newCoeffs;
+    if (bandId == 7)    *equaliser.get<7>().state = *newCoeffs;
 }
 
 //==============================================================================
