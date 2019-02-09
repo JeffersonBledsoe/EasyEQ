@@ -3,6 +3,8 @@
 <JUCERPROJECT id="nkNVLf" name="EasyEQ" projectType="audioplug" jucerVersion="5.4.2">
   <MAINGROUP id="XZuJSb" name="EasyEQ">
     <GROUP id="{235C9E8B-B981-66CA-E662-06B71A924845}" name="Source">
+      <FILE id="t81UFr" name="BandHandle.cpp" compile="1" resource="0" file="Source/BandHandle.cpp"/>
+      <FILE id="p6BYTV" name="BandHandle.h" compile="0" resource="0" file="Source/BandHandle.h"/>
       <FILE id="HPpHKC" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="LSbdjl" name="PluginProcessor.h" compile="0" resource="0"

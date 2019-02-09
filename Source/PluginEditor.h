@@ -2,6 +2,7 @@
 
 #include "JuceHeader.h"
 #include "PluginProcessor.h"
+#include "BandHandle.h"
 
 //==============================================================================
 class EasyEqAudioProcessorEditor : public AudioProcessorEditor,
