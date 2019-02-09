@@ -47,26 +47,27 @@ AudioProcessorValueTreeState::ParameterLayout createParameters()
     
     for (auto i {0}; i < 8; ++i)
     {
-        auto frequency = std::make_unique<AudioParameterFloat> ("frequency_band" + std::to_string (i), "Frequency",
+        const auto bandId = std::to_string (i);
+        auto frequency = std::make_unique<AudioParameterFloat> ("frequency_band" + bandId, "Frequency",
                                                                 NormalisableRange<float> (20.0f, 20000.0f), 1000.0f,
                                                                 "Hz", AudioProcessorParameter::genericParameter,
                                                                 [] (float value, int) { return String (value, 0).substring (0, 6).trimCharactersAtEnd ("."); },
                                                                 [] (String text) { return text.substring (0, 6).getFloatValue(); });
-        auto gain = std::make_unique<AudioParameterFloat> ("gain_band" + std::to_string (i), "Gain",
+        auto gain = std::make_unique<AudioParameterFloat> ("gain_band" + bandId, "Gain",
                                                            NormalisableRange<float> (0.0001f, 1.0f), 0.501f,
                                                            "dB", AudioProcessorParameter::genericParameter,
                                                            [] (float value, int) { return gainToFloat (value); },
                                                            [] (const String& text) { return Decibels::decibelsToGain (text.getFloatValue()); });
-        auto q = std::make_unique<AudioParameterFloat> ("q_band" + std::to_string (i), "Q",
+        auto q = std::make_unique<AudioParameterFloat> ("q_band" + bandId, "Q",
                                                         NormalisableRange<float> (0.05f, 30.0f), 0.707f,
                                                         String(), AudioProcessorParameter::genericParameter);
-        auto shape = std::make_unique<AudioParameterChoice> ("shape_band" + std::to_string (i), "Shape",
+        auto shape = std::make_unique<AudioParameterChoice> ("shape_band" + bandId, "Shape",
                                                              getFilterShapeNames(), 1);
-        auto bypass = std::make_unique<AudioParameterBool> ("bypass_band" + std::to_string (i), "Bypass",
+        auto bypass = std::make_unique<AudioParameterBool> ("bypass_band" + bandId, "Bypass",
                                                             false, String(),
                                                             [] (bool bypassed, int) { return bypassed ? "Bypassed" : "Active"; });
         
-        auto group = std::make_unique<AudioProcessorParameterGroup> ("band" + std::to_string (i), "Band" + std::to_string (i),
+        auto group = std::make_unique<AudioProcessorParameterGroup> ("band" + bandId, "Band" + bandId,
                                                                      "|",
                                                                      std::move (frequency),
                                                                      std::move (gain),
@@ -90,11 +91,12 @@ EasyEqAudioProcessor::EasyEqAudioProcessor()
 {
     for (auto i {0}; i < 8; ++i)
     {
-        state.addParameterListener ("frequency_band" + std::to_string (i), this);
-        state.addParameterListener ("gain_band" + std::to_string (i), this);
-        state.addParameterListener ("q_band" + std::to_string (i), this);
-        state.addParameterListener ("shape_band" + std::to_string (i), this);
-        state.addParameterListener ("bypass_band" + std::to_string (i), this);
+        const auto bandId = std::to_string (i);
+        state.addParameterListener ("frequency_band" + bandId, this);
+        state.addParameterListener ("gain_band" + bandId, this);
+        state.addParameterListener ("q_band" + bandId, this);
+        state.addParameterListener ("shape_band" + bandId, this);
+        state.addParameterListener ("bypass_band" + bandId, this);
     }
 }
 
@@ -109,10 +111,17 @@ void EasyEqAudioProcessor::parameterChanged (const String& parameterId, float ne
 {
     const auto bandId = parameterId.getLastCharacters (1).getIntValue();
     
-//    if (parameterId.containsIgnoreCase ("bypass"))
-//    {
-//        equaliser.setBypassed<bandId> (newValue > 0.5 ? true : false);
-//    }
+    if (parameterId.containsIgnoreCase ("bypass"))
+    {
+        equaliser.setBypassed<0> (*state.getRawParameterValue ("bypass_band" + std::to_string (0)));
+        equaliser.setBypassed<1> (*state.getRawParameterValue ("bypass_band" + std::to_string (1)));
+        equaliser.setBypassed<2> (*state.getRawParameterValue ("bypass_band" + std::to_string (2)));
+        equaliser.setBypassed<3> (*state.getRawParameterValue ("bypass_band" + std::to_string (3)));
+        equaliser.setBypassed<4> (*state.getRawParameterValue ("bypass_band" + std::to_string (4)));
+        equaliser.setBypassed<5> (*state.getRawParameterValue ("bypass_band" + std::to_string (5)));
+        equaliser.setBypassed<6> (*state.getRawParameterValue ("bypass_band" + std::to_string (6)));
+        equaliser.setBypassed<7> (*state.getRawParameterValue ("bypass_band" + std::to_string (7)));
+    }
     
     updateBand (bandId);
 }
@@ -127,10 +136,11 @@ void EasyEqAudioProcessor::updateBand (int bandId)
     if (! isPositiveAndBelow (bandId, 8))
         return;
     
-    const auto frequency = *state.getRawParameterValue ("frequency_band" + std::to_string (bandId));
-    const auto gain = *state.getRawParameterValue ("gain_band" + std::to_string (bandId));
-    const auto q = *state.getRawParameterValue ("q_band" + std::to_string (bandId));
-    const auto shape = *state.getRawParameterValue ("shape_band" + std::to_string (bandId));
+    const auto bandNumber = std::to_string (bandId);
+    const auto frequency = *state.getRawParameterValue ("frequency_band" + bandNumber);
+    const auto gain = *state.getRawParameterValue ("gain_band" + bandNumber);
+    const auto q = *state.getRawParameterValue ("q_band" + bandNumber);
+    const auto shape = *state.getRawParameterValue ("shape_band" + bandNumber);
     
     switch (static_cast<int> (shape))
     {
