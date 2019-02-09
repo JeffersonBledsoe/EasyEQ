@@ -27,7 +27,7 @@ EasyEqAudioProcessorEditor::EasyEqAudioProcessorEditor (EasyEqAudioProcessor& p,
     addAndMakeVisible (bypassButton);
     addAndMakeVisible (shapeSelector);
     
-    frequencyAttachment = std::make_unique<SliderAttachment> (state, "frequenc_band0", frequencySlider);
+    frequencyAttachment = std::make_unique<SliderAttachment> (state, "frequency_band0", frequencySlider);
     gainAttachment = std::make_unique<SliderAttachment> (state, "gain_band0", gainSlider);
     qAttachment = std::make_unique<SliderAttachment> (state, "q_band0", qSlider);
     bypassAttachment = std::make_unique<ButtonAttachment> (state, "bypass_band0", bypassButton);
