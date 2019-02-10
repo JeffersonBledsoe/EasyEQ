@@ -99,6 +99,12 @@ EasyEqAudioProcessor::EasyEqAudioProcessor()
         state.addParameterListener (ParameterNames::shape + "_band" + bandId, this);
         state.addParameterListener (ParameterNames::bypass + "_band" + bandId, this);
     }
+    
+    frequencies.resize (300);
+    for (auto i=0; i < frequencies.size(); ++i) {
+        frequencies [i] = 20.0 * std::pow (2.0, i / 30.0);
+    }
+    magnitudes.resize (frequencies.size());
 }
 
 //==============================================================================
@@ -138,6 +144,8 @@ void EasyEqAudioProcessor::updateBand (int bandId)
     
     if (! isPositiveAndBelow (bandId, 8))
         return;
+    
+    DBG ("Update band");
     
     const auto bandNumber = std::to_string (bandId);
     const auto frequency = *state.getRawParameterValue (ParameterNames::frequency + "_band" + bandNumber);
@@ -192,6 +200,14 @@ void EasyEqAudioProcessor::updateBand (int bandId)
     if (bandId == 5)    *equaliser.get<5>().state = *newCoeffs;
     if (bandId == 6)    *equaliser.get<6>().state = *newCoeffs;
     if (bandId == 7)    *equaliser.get<7>().state = *newCoeffs;
+    
+    newCoeffs->getMagnitudeForFrequencyArray (frequencies.data(), magnitudes.data(),
+                                              frequencies.size(), currentSampleRate);
+    if (magnitudes.size() > 0)
+    {
+        DBG ("Send change");
+        sendChangeMessage();
+    }
 }
 
 //==============================================================================

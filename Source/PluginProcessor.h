@@ -4,12 +4,20 @@
 
 //==============================================================================
 class EasyEqAudioProcessor : public AudioProcessor,
-                             public AudioProcessorValueTreeState::Listener
+                             public AudioProcessorValueTreeState::Listener,
+                             public ChangeBroadcaster
 {
 public:
     //==============================================================================
     EasyEqAudioProcessor();
     ~EasyEqAudioProcessor() = default;
+    
+    //==============================================================================
+    const std::vector<double>& getMagnitudes() const
+    { return magnitudes; }
+    
+    const std::vector<double>& getFrequencies() const
+    { return frequencies; }
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -45,18 +53,22 @@ public:
     //==============================================================================
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
+    
+    
 
 private:
     //==============================================================================
     AudioProcessorValueTreeState state;
     using EqBand = dsp::ProcessorDuplicator<dsp::IIR::Filter<float>, dsp::IIR::Coefficients<float>>;
     dsp::ProcessorChain<EqBand, EqBand, EqBand, EqBand, EqBand, EqBand, EqBand, EqBand> equaliser;
+    void updateBand (int bandId);
     
     //==============================================================================
     double currentSampleRate { 0 };
     
     //==============================================================================
-    void updateBand (int bandId);
+    std::vector<double> frequencies;
+    std::vector<double> magnitudes;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EasyEqAudioProcessor)
 };

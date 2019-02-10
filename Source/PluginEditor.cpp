@@ -5,7 +5,7 @@
 //==============================================================================
 EasyEqAudioProcessorEditor::EasyEqAudioProcessorEditor (EasyEqAudioProcessor& p,
                                                         AudioProcessorValueTreeState& s)
-: AudioProcessorEditor (&p), state (s), handleControl (s), controlPanel (s)
+: AudioProcessorEditor (&p), processor (p), state (s), handleControl (s), controlPanel (s)
 {
     addAndMakeVisible (frequencyResponse);
     addAndMakeVisible (handleControl);
@@ -14,6 +14,8 @@ EasyEqAudioProcessorEditor::EasyEqAudioProcessorEditor (EasyEqAudioProcessor& p,
     handleControl.addChangeListener (this);
     
     setSize (1000, 600);
+    
+    processor.addChangeListener (this);
 }
 
 //==============================================================================
@@ -32,7 +34,17 @@ void EasyEqAudioProcessorEditor::resized()
 //==============================================================================
 void EasyEqAudioProcessorEditor::changeListenerCallback (ChangeBroadcaster* broadcaster)
 {
-    auto* h = static_cast<HandleArea*> (broadcaster);
+    DBG ("change receive");
     
-    controlPanel.setSelectedBand (h->selectedBandId);
+    if (auto* h = dynamic_cast<HandleArea*> (broadcaster))
+    {
+        controlPanel.setSelectedBand (h->selectedBandId);
+        
+        frequencyResponse.updatePlot (processor.getFrequencies(), processor.getMagnitudes());
+    }
+    else if (auto* p = dynamic_cast<EasyEqAudioProcessor*> (broadcaster))
+    {
+        DBG ("processor change");
+        frequencyResponse.updatePlot (processor.getFrequencies(), processor.getMagnitudes());
+    }
 }

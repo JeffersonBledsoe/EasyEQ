@@ -20,6 +20,7 @@ public:
 
 private:
     //==========================================================================
+    EasyEqAudioProcessor& processor;
     AudioProcessorValueTreeState& state;
     
     //==========================================================================
