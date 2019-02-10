@@ -10,21 +10,6 @@ public:
     //==============================================================================
     EasyEqAudioProcessor();
     ~EasyEqAudioProcessor() = default;
-    
-    //==============================================================================
-    enum FilterShape
-    {
-        NoFilter = 0,
-        Bell,
-        LowCut,
-        LowShelf,
-        HighShelf,
-        HighCut,
-        Notch,
-        BandPass,
-        
-        numOfShapes
-    };
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;

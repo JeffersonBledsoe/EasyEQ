@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="nkNVLf" name="EasyEQ" projectType="audioplug" jucerVersion="5.4.2">
+<JUCERPROJECT id="nkNVLf" name="EasyEQ" projectType="audioplug" jucerVersion="5.4.1">
   <MAINGROUP id="XZuJSb" name="EasyEQ">
     <GROUP id="{235C9E8B-B981-66CA-E662-06B71A924845}" name="Source">
       <FILE id="t81UFr" name="BandHandle.cpp" compile="1" resource="0" file="Source/BandHandle.cpp"/>
       <FILE id="p6BYTV" name="BandHandle.h" compile="0" resource="0" file="Source/BandHandle.h"/>
+      <FILE id="YG6AIC" name="ControlPanel.cpp" compile="1" resource="0"
+            file="Source/ControlPanel.cpp"/>
+      <FILE id="d0dfmd" name="ControlPanel.h" compile="0" resource="0" file="Source/ControlPanel.h"/>
+      <FILE id="I195hM" name="HandleArea.cpp" compile="1" resource="0" file="Source/HandleArea.cpp"/>
+      <FILE id="jZEGd7" name="HandleArea.h" compile="0" resource="0" file="Source/HandleArea.h"/>
+      <FILE id="Xi2JFP" name="Utilities.h" compile="0" resource="0" file="Source/Utilities.h"/>
       <FILE id="HPpHKC" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="LSbdjl" name="PluginProcessor.h" compile="0" resource="0"

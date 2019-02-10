@@ -1,31 +1,39 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "Utilities.h"
 
 //==============================================================================
 EasyEqAudioProcessorEditor::EasyEqAudioProcessorEditor (EasyEqAudioProcessor& p,
                                                         AudioProcessorValueTreeState& s)
-: AudioProcessorEditor (&p), processor (p), state (s)
+: AudioProcessorEditor (&p), state (s), handleArea (s), controlPanel (s)
 {
-    for (auto i {0}; i < 8; ++i)
-        addAndMakeVisible (handles.add (new BandHandle (i, state)));
+    addAndMakeVisible (handleArea);
+    addAndMakeVisible (controlPanel);
     
+    handleArea.addChangeListener (this);
+ 
     setSize (1000, 600);
 }
 
 //==============================================================================
 void EasyEqAudioProcessorEditor::paint (Graphics& g)
 {
-    g.setColour (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
+    g.setColour (Colours::black);
     g.fillRect (getLocalBounds());
 }
 
 void EasyEqAudioProcessorEditor::resized()
 {
-    FlexBox flex;
-    flex.flexDirection = FlexBox::Direction::row;
+    auto bounds = getLocalBounds();
     
-    for (auto* handle : handles)
-        flex.items.add (FlexItem (*handle).withFlex (1));
+    handleArea.setBounds (bounds.removeFromTop (proportionOfHeight (0.8f)));
+    controlPanel.setBounds (bounds);
+}
+
+//==============================================================================
+void EasyEqAudioProcessorEditor::changeListenerCallback (ChangeBroadcaster* broadcaster)
+{
+    auto* h = static_cast<HandleArea*> (broadcaster);
     
-    flex.performLayout (getLocalBounds());
+    controlPanel.setSelectedBand (h->selectedBandId);
 }

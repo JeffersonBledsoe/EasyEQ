@@ -2,10 +2,12 @@
 
 #include "JuceHeader.h"
 #include "PluginProcessor.h"
-#include "BandHandle.h"
+#include "HandleArea.h"
+#include "ControlPanel.h"
 
 //==============================================================================
-class EasyEqAudioProcessorEditor : public AudioProcessorEditor
+class EasyEqAudioProcessorEditor : public AudioProcessorEditor,
+                                   public ChangeListener
 {
 public:
     EasyEqAudioProcessorEditor (EasyEqAudioProcessor& processor,
@@ -18,11 +20,14 @@ public:
 
 private:
     //==========================================================================
-    EasyEqAudioProcessor& processor;
     AudioProcessorValueTreeState& state;
     
     //==========================================================================
-    OwnedArray<BandHandle> handles;
+    HandleArea handleArea;
+    ControlPanel controlPanel;
+    
+    //==========================================================================
+    void changeListenerCallback (ChangeBroadcaster* broadcaster) override;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EasyEqAudioProcessorEditor)
 };
