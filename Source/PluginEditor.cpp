@@ -5,28 +5,27 @@
 //==============================================================================
 EasyEqAudioProcessorEditor::EasyEqAudioProcessorEditor (EasyEqAudioProcessor& p,
                                                         AudioProcessorValueTreeState& s)
-: AudioProcessorEditor (&p), state (s), handleArea (s), controlPanel (s)
+: AudioProcessorEditor (&p), state (s), handleControl (s), controlPanel (s)
 {
-    addAndMakeVisible (handleArea);
+    addAndMakeVisible (frequencyResponse);
+    addAndMakeVisible (handleControl);
     addAndMakeVisible (controlPanel);
     
-    handleArea.addChangeListener (this);
- 
+    handleControl.addChangeListener (this);
+    
     setSize (1000, 600);
 }
 
 //==============================================================================
-void EasyEqAudioProcessorEditor::paint (Graphics& g)
-{
-    g.setColour (Colours::black);
-    g.fillRect (getLocalBounds());
-}
-
 void EasyEqAudioProcessorEditor::resized()
 {
     auto bounds = getLocalBounds();
     
-    handleArea.setBounds (bounds.removeFromTop (proportionOfHeight (0.8f)));
+    auto handleArea = bounds.removeFromTop (proportionOfHeight (0.8f));
+    
+    frequencyResponse.setBounds (handleArea);
+    handleControl.setBounds (handleArea);
+    
     controlPanel.setBounds (bounds);
 }
 

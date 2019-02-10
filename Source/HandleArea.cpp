@@ -20,24 +20,14 @@ HandleArea::HandleArea (AudioProcessorValueTreeState& s)
             handle->addMouseListener (this, true);
             selectedBandId = handle->getBandId();
             resized();
-        }
-            
+        }       
     }
-    
-    setOpaque (true);
 }
 
 HandleArea::~HandleArea()
 {
     for (auto i {0}; i < 8; ++i)
         state.removeParameterListener (ParameterNames::enabled + "_band" + std::to_string (i), this);
-}
-
-//==========================================================================
-void HandleArea::paint (Graphics& g)
-{
-    g.setColour (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
-    g.fillRect (getLocalBounds());
 }
 
 //==========================================================================

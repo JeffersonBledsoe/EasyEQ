@@ -14,7 +14,6 @@ public:
     ~HandleArea();
 
     //==========================================================================
-    void paint (Graphics&) override;
     void parameterChanged (const String& parameterId, float newValue) override;
     
     //==========================================================================

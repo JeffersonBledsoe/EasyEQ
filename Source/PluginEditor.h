@@ -4,6 +4,7 @@
 #include "PluginProcessor.h"
 #include "HandleArea.h"
 #include "ControlPanel.h"
+#include "FrequencyResponseUnderlay.h"
 
 //==============================================================================
 class EasyEqAudioProcessorEditor : public AudioProcessorEditor,
@@ -15,7 +16,6 @@ public:
     ~EasyEqAudioProcessorEditor() = default;
 
     //==========================================================================
-    void paint (Graphics&) override;
     void resized() override;
 
 private:
@@ -23,7 +23,8 @@ private:
     AudioProcessorValueTreeState& state;
     
     //==========================================================================
-    HandleArea handleArea;
+    FrequencyResponseUnderlay frequencyResponse;
+    HandleArea handleControl;
     ControlPanel controlPanel;
     
     //==========================================================================
