@@ -100,9 +100,9 @@ EasyEqAudioProcessor::EasyEqAudioProcessor()
         state.addParameterListener (ParameterNames::bypass + "_band" + bandId, this);
     }
     
-    frequencies.resize (300);
-    for (auto i=0; i < frequencies.size(); ++i) {
-        frequencies [i] = 20.0 * std::pow (2.0, i / 30.0);
+    frequencies.resize (1000);
+    for (auto i {0}; i < frequencies.size(); ++i) {
+        frequencies [i] = 20.0 * std::pow (2.0, i / 100.0);
     }
     magnitudes.resize (frequencies.size());
 }
