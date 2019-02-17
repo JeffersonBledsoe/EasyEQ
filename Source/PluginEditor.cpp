@@ -127,6 +127,8 @@ void EasyEqAudioProcessorEditor::mouseDoubleClick (const MouseEvent& event)
             frequencyParam->setValueNotifyingHost (proportionalWidth);
             gainParam->setValueNotifyingHost (1.0f - proportionalHeight);
             
+            controlPanel.setSelectedBand (i);
+            
             return;
         }
     }
