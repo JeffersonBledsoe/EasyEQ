@@ -32,7 +32,7 @@ void FrequencyResponseUnderlay::updatePlot (const std::vector<double>& frequenci
     for (auto frequency {0}; frequency < frequencies.size(); ++frequency)
     {
         plotPath.lineTo (getX() + frequency * xFactor,
-                         getLocalBounds().getCentreY() - yFactor * std::log (magnitudes [frequency]) / std::log (2));
+                         getLocalBounds().getCentreY() - yFactor * std::log (magnitudes[frequency]) / std::log (2));
     }
     
     PathStrokeType hitPathStroke (6.0f);

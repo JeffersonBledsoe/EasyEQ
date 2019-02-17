@@ -15,7 +15,7 @@ public:
     
     //==============================================================================
     const std::vector<double>& getMagnitudes() const
-    { return magnitudes; }
+    { return totalMagnitudes; }
     
     const std::vector<double>& getFrequencies() const
     { return frequencies; }
@@ -55,9 +55,30 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
     
+    //==============================================================================
+    struct Band
+    {
+        Band (const int bandIdToUse,
+              float frequencyToUse, float qToUse, FilterShape shapeToUse,
+              float gainToUse = 1.0f, bool shouldBypass = false, bool enabled = false)
+        : bandId (bandIdToUse),
+          frequency (frequencyToUse), q (qToUse), shape (shapeToUse),
+          gain (gainToUse), bypassed (shouldBypass), isEnabled (enabled)
+        {}
+        const int bandId;
+        float frequency;
+        float q;
+        FilterShape shape;
+        float gain;
+        bool bypassed;
+        bool isEnabled;
+        std::vector<double> magnitudes;
+    };
+    
 private:
     //==============================================================================
     AudioProcessorValueTreeState state;
+    std::array<Band, 8> bands;
     using EqBand = dsp::ProcessorDuplicator<dsp::IIR::Filter<float>, dsp::IIR::Coefficients<float>>;
     dsp::ProcessorChain<EqBand, EqBand, EqBand, EqBand, EqBand, EqBand, EqBand, EqBand> equaliser;
     void updateBand (const int bandId);
@@ -67,7 +88,8 @@ private:
     
     //==============================================================================
     std::vector<double> frequencies;
-    std::vector<double> magnitudes;
+    std::vector<double> totalMagnitudes;
+    void updateFrequencyResponse();
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EasyEqAudioProcessor)
 };

@@ -54,10 +54,6 @@ void BandHandle::parameterChanged (const String& parameterId, float newValue)
             setCentrePosition (x, y);
         });
     }
-    else if (parameterId.containsIgnoreCase (ParameterNames::shape))
-    {
-        DBG (shapeParam->getCurrentChoiceName());
-    }
 }
 
 //==============================================================================

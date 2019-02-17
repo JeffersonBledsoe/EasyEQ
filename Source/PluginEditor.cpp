@@ -59,19 +59,10 @@ void EasyEqAudioProcessorEditor::resized()
 //==============================================================================
 void EasyEqAudioProcessorEditor::changeListenerCallback (ChangeBroadcaster* broadcaster)
 {
-    DBG ("change receive");
-    
-//    if (auto* h = dynamic_cast<HandleArea*> (broadcaster))
-//    {
-//        controlPanel.setSelectedBand (h->selectedBandId);
-//
-//        frequencyResponse.updatePlot (processor.getFrequencies(), processor.getMagnitudes());
-//    }
     if (auto* p = dynamic_cast<EasyEqAudioProcessor*> (broadcaster))
-    {
-        DBG ("processor change");
         frequencyResponse.updatePlot (processor.getFrequencies(), processor.getMagnitudes());
-    }
+    else
+        DBG ("change received from unknown source");
 }
 
 void EasyEqAudioProcessorEditor::parameterChanged (const String& parameterId, float newValue)
@@ -103,7 +94,7 @@ void EasyEqAudioProcessorEditor::mouseDown (const MouseEvent& event)
         frequencyResponse.updatePlot (processor.getFrequencies(), processor.getMagnitudes());
     }
     else
-        DBG ("Original componen: " + event.originalComponent->getName());
+        DBG ("Original component: " + event.originalComponent->getName());
 }
 
 void EasyEqAudioProcessorEditor::mouseDoubleClick (const MouseEvent& event)
@@ -113,11 +104,14 @@ void EasyEqAudioProcessorEditor::mouseDoubleClick (const MouseEvent& event)
     
     for (auto i {0}; i < 8; ++i)
     {
-        const auto bandToAdd = ParameterNames::enabled + "_band" + std::to_string (i);
-        auto enabledParam = static_cast<AudioParameterBool*> (state.getParameter (bandToAdd));
+        const auto enabledParamName = ParameterNames::enabled + "_band" + std::to_string (i);
+        auto enabledParam = dynamic_cast<AudioParameterBool*> (state.getParameter (enabledParamName));
         
         if (enabledParam == nullptr)
+        {
+            DBG ("Invalid enabled parameter");
             return;
+        }
         
         if (*enabledParam == false)
         {

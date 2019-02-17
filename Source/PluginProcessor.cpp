@@ -82,28 +82,50 @@ AudioProcessorValueTreeState::ParameterLayout createParameters()
     return parameters;
 }
 
+std::array<EasyEqAudioProcessor::Band, 8> createBandDefaults()
+{
+    std::array<EasyEqAudioProcessor::Band, 8> defaults
+    {
+        EasyEqAudioProcessor::Band (0, 1000.0f, 0.707f, FilterShape::Bell),
+        EasyEqAudioProcessor::Band (1, 1000.0f, 0.707f, FilterShape::Bell),
+        EasyEqAudioProcessor::Band (2, 1000.0f, 0.707f, FilterShape::Bell),
+        EasyEqAudioProcessor::Band (3, 1000.0f, 0.707f, FilterShape::Bell),
+        EasyEqAudioProcessor::Band (4, 1000.0f, 0.707f, FilterShape::Bell),
+        EasyEqAudioProcessor::Band (5, 1000.0f, 0.707f, FilterShape::Bell),
+        EasyEqAudioProcessor::Band (6, 1000.0f, 0.707f, FilterShape::Bell),
+        EasyEqAudioProcessor::Band (7, 1000.0f, 0.707f, FilterShape::Bell)
+    };
+    
+    return defaults;
+}
+
 //==============================================================================
 EasyEqAudioProcessor::EasyEqAudioProcessor()
 : AudioProcessor (BusesProperties()
                   .withInput  ("Input",  AudioChannelSet::mono(), true)
                   .withOutput ("Output", AudioChannelSet::mono(), true)
                   ),
-  state (*this, nullptr, "STATE", createParameters())
+  state (*this, nullptr, JucePlugin_Name, createParameters()), bands (createBandDefaults())
 {
-    for (auto i {0}; i < 8; ++i)
+    frequencies.resize (1000);
+    for (auto i {0}; i < frequencies.size(); ++i)
+        frequencies[i] = 20.0 * std::pow (2.0, i / 100.0);
+    totalMagnitudes.resize (frequencies.size());
+    
+    createBandDefaults();
+    
+    for (auto i {0}; i < bands.size(); ++i)
     {
-        const auto bandId = std::to_string (i);
+        bands[i].magnitudes.resize (frequencies.size(), 1.0);
+        
+        const auto bandId = std::to_string (bands[i].bandId);
         state.addParameterListener (ParameterNames::frequency + "_band" + bandId, this);
         state.addParameterListener (ParameterNames::gain + "_band" + bandId, this);
         state.addParameterListener (ParameterNames::q + "_band" + bandId, this);
         state.addParameterListener (ParameterNames::shape + "_band" + bandId, this);
         state.addParameterListener (ParameterNames::bypass + "_band" + bandId, this);
+        state.addParameterListener (ParameterNames::enabled + "_band" + bandId, this);
     }
-    
-    frequencies.resize (1000);
-    for (auto i {0}; i < frequencies.size(); ++i)
-        frequencies [i] = 20.0 * std::pow (2.0, i / 100.0);
-    magnitudes.resize (frequencies.size());
 }
 
 //==============================================================================
@@ -129,18 +151,32 @@ void EasyEqAudioProcessor::parameterChanged (const String& parameterId, float ne
         equaliser.setBypassed<7> (*state.getRawParameterValue (ParameterNames::bypass + "_band" + std::to_string (7)));
     }
     else
+    {
+        if (! isPositiveAndBelow (bandId, bands.size()))
+            return;
+        
+        auto& band = bands[bandId];
+        
+        if (parameterId.containsIgnoreCase (ParameterNames::shape))
+            band.shape = static_cast<FilterShape> (static_cast<int> (newValue));
+        else if (parameterId.containsIgnoreCase (ParameterNames::frequency))
+            band.frequency = newValue;
+        else if (parameterId.containsIgnoreCase (ParameterNames::q))
+            band.q = newValue;
+        else if (parameterId.containsIgnoreCase (ParameterNames::gain))
+            band.gain = newValue;
+        else if (parameterId.containsIgnoreCase (ParameterNames::bypass))
+            band.bypassed = newValue >= 0.5f;
+        else if (parameterId.containsIgnoreCase (ParameterNames::enabled))
+            band.isEnabled = newValue >= 0.5f;
+        
         updateBand (bandId);
+    }
 }
 
 void EasyEqAudioProcessor::updateBand (const int bandId)
 {
-    if (currentSampleRate < 1)
-        return;
-    
     dsp::IIR::Coefficients<float>::Ptr newCoeffs;
-    
-    if (! isPositiveAndBelow (bandId, 8))
-        return;
     
     const auto bandNumber = std::to_string (bandId);
     const auto frequency = *state.getRawParameterValue (ParameterNames::frequency + "_band" + bandNumber);
@@ -196,10 +232,23 @@ void EasyEqAudioProcessor::updateBand (const int bandId)
     else if (bandId == 6)    *equaliser.get<6>().state = *newCoeffs;
     else if (bandId == 7)    *equaliser.get<7>().state = *newCoeffs;
     
-    newCoeffs->getMagnitudeForFrequencyArray (frequencies.data(), magnitudes.data(),
+    newCoeffs->getMagnitudeForFrequencyArray (frequencies.data(),
+                                              bands[bandId].magnitudes.data(),
                                               frequencies.size(), currentSampleRate);
+    
+    updateFrequencyResponse();
+    
     if (getActiveEditor() != nullptr)
         sendChangeMessage();
+}
+
+void EasyEqAudioProcessor::updateFrequencyResponse()
+{
+    std::fill (totalMagnitudes.begin(), totalMagnitudes.end(), 1.0f);
+    
+    for (auto i {0}; i < bands.size(); ++i)
+        if (bands[i].isEnabled)
+            FloatVectorOperations::multiply (totalMagnitudes.data(), bands[i].magnitudes.data(), static_cast<int> (totalMagnitudes.size()));
 }
 
 //==============================================================================
