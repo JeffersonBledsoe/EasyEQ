@@ -24,12 +24,13 @@ void FrequencyResponseUnderlay::updatePlot (const std::vector<double>& frequenci
     
     plotPath.clear();
     
-    plotPath.startNewSubPath (getX(), getLocalBounds().getCentreY());
-    
     const auto yFactor = getHeight() / Decibels::gainToDecibels (2.0);
     const auto xFactor = getWidth() / frequencies.size();
     
-    for (auto frequency {0}; frequency < frequencies.size(); ++frequency)
+    plotPath.startNewSubPath (getX(),
+                              getLocalBounds().getCentreY() - yFactor * std::log (magnitudes[0]) / std::log (2));
+    
+    for (auto frequency {1}; frequency < frequencies.size(); ++frequency)
     {
         plotPath.lineTo (getX() + frequency * xFactor,
                          getLocalBounds().getCentreY() - yFactor * std::log (magnitudes[frequency]) / std::log (2));
