@@ -54,12 +54,17 @@ void BandHandle::parameterChanged (const String& parameterId, float newValue)
             setCentrePosition (x, y);
         });
     }
+    
+    repaint();
 }
 
 //==============================================================================
 void BandHandle::paint (Graphics& g)
 {
-    g.setColour (Colours::pink);
+    ColourGradient fillGradient (Colours::black.brighter (0.6f), Point<float> (getLocalBounds().getCentreX(), 0),
+                                 Colours::black.brighter (0.4f), Point<float> (getLocalBounds().getCentreX(), getHeight()),
+                                 false);
+    g.setGradientFill (fillGradient);
     g.fillEllipse (getLocalBounds().toFloat());
     
     g.setColour (Colours::white);
@@ -101,6 +106,4 @@ void BandHandle::mouseDrag (const MouseEvent& event)
     frequencyParam->setValueNotifyingHost (proportionalWidth);
     if (proportionalHeight > 0)
         gainParam->setValueNotifyingHost (1.0f - proportionalHeight);
-    
-    repaint();
 }

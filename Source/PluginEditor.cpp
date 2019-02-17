@@ -5,11 +5,13 @@
 //==============================================================================
 EasyEqAudioProcessorEditor::EasyEqAudioProcessorEditor (EasyEqAudioProcessor& p,
                                                         AudioProcessorValueTreeState& s)
-//: AudioProcessorEditor (&p), processor (p), state (s), handleControl (s), controlPanel (s)
 : AudioProcessorEditor (&p), processor (p), state (s), controlPanel (s)
 {
+    auto* laf = dynamic_cast<LookAndFeel_V4*> (&getLookAndFeel());
+    laf->setColour (DocumentWindow::backgroundColourId, Colour::fromRGB (44, 44, 44));
+    lookAndFeelChanged();
+    
     addAndMakeVisible (frequencyResponse);
-//    addAndMakeVisible (handleControl);
     addAndMakeVisible (controlPanel);
     
     for (auto i {0}; i < 8; ++i)
@@ -30,11 +32,11 @@ EasyEqAudioProcessorEditor::EasyEqAudioProcessorEditor (EasyEqAudioProcessor& p,
     }
     
     frequencyResponse.addMouseListener (this, false);
-//    handleControl.addChangeListener (this);
     
     setSize (1000, 600);
     
     processor.addChangeListener (this);
+    frequencyResponse.updatePlot (processor.getFrequencies(), processor.getMagnitudes());
 }
 
 EasyEqAudioProcessorEditor::~EasyEqAudioProcessorEditor()
@@ -51,7 +53,6 @@ void EasyEqAudioProcessorEditor::resized()
     auto handleArea = bounds.removeFromTop (proportionOfHeight (0.8f));
     
     frequencyResponse.setBounds (handleArea);
-//    handleControl.setBounds (handleArea);
     
     controlPanel.setBounds (bounds);
 }

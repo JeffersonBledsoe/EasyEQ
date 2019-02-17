@@ -2,7 +2,6 @@
 
 #include "JuceHeader.h"
 #include "PluginProcessor.h"
-//#include "HandleArea.h"
 #include "ControlPanel.h"
 #include "FrequencyResponseUnderlay.h"
 #include "BandHandle.h"
@@ -33,7 +32,6 @@ private:
     
     //==========================================================================
     FrequencyResponseUnderlay frequencyResponse;
-//    HandleArea handleControl;
     OwnedArray<BandHandle> handles;
     ControlPanel controlPanel;
     

@@ -91,7 +91,7 @@ void ControlPanel::parameterChanged (const String& parameterId, float newValue)
 //==============================================================================
 void ControlPanel::paint (Graphics& g)
 {
-    g.setColour (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
+    g.setColour (getLookAndFeel().findColour (ResizableWindow::backgroundColourId).brighter (0.1f));
     g.fillRect (getLocalBounds());
 
     g.setColour (Colours::grey);

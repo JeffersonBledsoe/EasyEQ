@@ -9,10 +9,10 @@ FrequencyResponseUnderlay::FrequencyResponseUnderlay()
 
 void FrequencyResponseUnderlay::paint (Graphics& g)
 {
-    g.setColour (getLookAndFeel().findColour (ResizableWindow::backgroundColourId).brighter());
+    g.setColour (getLookAndFeel().findColour (ResizableWindow::backgroundColourId) );
     g.fillRect (getLocalBounds());
     
-    g.setColour (Colours::red);
+    g.setColour (Colour::fromRGB (235, 235, 235));
     g.fillPath (plotPath);
 }
 
@@ -38,7 +38,7 @@ void FrequencyResponseUnderlay::updatePlot (const std::vector<double>& frequenci
     PathStrokeType hitPathStroke (6.0f);
     hitPathStroke.createStrokedPath (hitPath, plotPath);
     
-    PathStrokeType plotPathStroke (2.0f);
+    PathStrokeType plotPathStroke (3.0f);
     plotPathStroke.createStrokedPath (plotPath, plotPath);
     
     repaint();

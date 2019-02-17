@@ -111,6 +111,7 @@ EasyEqAudioProcessor::EasyEqAudioProcessor()
     for (auto i {0}; i < frequencies.size(); ++i)
         frequencies[i] = 20.0 * std::pow (2.0, i / 100.0);
     totalMagnitudes.resize (frequencies.size());
+    std::fill (totalMagnitudes.begin(), totalMagnitudes.end(), 1.0f);
     
     createBandDefaults();
     
