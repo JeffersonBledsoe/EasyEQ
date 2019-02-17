@@ -8,7 +8,7 @@ using ButtonAttachment = AudioProcessorValueTreeState::ButtonAttachment;
 using ComboBoxAttachment = AudioProcessorValueTreeState::ComboBoxAttachment;
 
 //==============================================================================
-BandHandle::BandHandle (int id, AudioProcessorValueTreeState& s)
+BandHandle::BandHandle (const int id, AudioProcessorValueTreeState& s)
 : bandId (id), state (s)
 {
     setSize (20, 20);
@@ -25,6 +25,8 @@ BandHandle::BandHandle (int id, AudioProcessorValueTreeState& s)
     state.addParameterListener ("q_band" + bandNumber, this);
     state.addParameterListener ("shape_band" + bandNumber, this);
     state.addParameterListener ("bypass_band" + bandNumber, this);
+    
+    setName ("Band " + bandNumber);
     
     resized();
 }

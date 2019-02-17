@@ -15,8 +15,6 @@
             resource="0" file="Source/FrequencyResponseUnderlay.cpp"/>
       <FILE id="pvIGdq" name="FrequencyResponseUnderlay.h" compile="0" resource="0"
             file="Source/FrequencyResponseUnderlay.h"/>
-      <FILE id="I195hM" name="HandleArea.cpp" compile="1" resource="0" file="Source/HandleArea.cpp"/>
-      <FILE id="jZEGd7" name="HandleArea.h" compile="0" resource="0" file="Source/HandleArea.h"/>
       <FILE id="mFrKK1" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="IEq5Ag" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>

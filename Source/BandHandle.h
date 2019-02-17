@@ -8,19 +8,19 @@ class BandHandle : public Component,
 {
 public:
     //==========================================================================
-    BandHandle (int bandId, AudioProcessorValueTreeState& state);
+    BandHandle (const int bandId, AudioProcessorValueTreeState& state);
     ~BandHandle();
     
     //==============================================================================
     void parameterChanged (const String& parameterID, float newValue) override;
     void paint (Graphics& g) override;
     
-    int getBandId() const noexcept
+    const int getBandId() const noexcept
     { return bandId; }
     
 private:
     //==============================================================================
-    int bandId;
+    const int bandId;
     AudioProcessorValueTreeState& state;
     
     //==========================================================================

@@ -43,6 +43,7 @@ void ControlPanel::setSelectedBand (int bandId)
     qAttachment.reset();
     bypassAttachment.reset();
     shapeAttachment.reset();
+    shapeSelector.clear();
     
     currentBandId = bandId;
     const auto bandNumber = std::to_string (bandId);
@@ -63,6 +64,10 @@ void ControlPanel::setSelectedBand (int bandId)
     qAttachment = std::make_unique<SliderAttachment> (state, "q_band" + bandNumber, qSlider);
     bypassAttachment = std::make_unique<ButtonAttachment> (state, "bypass_band" + bandNumber, bypassButton);
     shapeAttachment = std::make_unique<ComboBoxAttachment> (state, "shape_band" + bandNumber, shapeSelector);
+    
+    frequencySlider.setSkewFactor (500);
+    frequencySlider.textFromValueFunction = [this] (double value) { return String (std::exp (std::log (value))); };
+//    frequencySlider.textFromValueFunction = [this] (double value) { return String (20.0 * std::pow (2.0, value / 100.0)); };
 }
 
 ControlPanel::~ControlPanel()

@@ -4,7 +4,7 @@
 //==============================================================================
 FrequencyResponseUnderlay::FrequencyResponseUnderlay()
 {
-    setInterceptsMouseClicks (false, false);
+    setName ("Response Underlay");
 }
 
 void FrequencyResponseUnderlay::paint (Graphics& g)
@@ -13,14 +13,12 @@ void FrequencyResponseUnderlay::paint (Graphics& g)
     g.fillRect (getLocalBounds());
     
     g.setColour (Colours::red);
-    g.strokePath (plotPath, PathStrokeType (2));
+    g.fillPath (plotPath);
 }
 
 //==============================================================================
 void FrequencyResponseUnderlay::updatePlot (const std::vector<double>& frequencies, const std::vector<double>& magnitudes)
 {
-    DBG ("update");
-    
     if (frequencies.size() < 1 || magnitudes.size() < 1)
         return;
     
@@ -37,7 +35,20 @@ void FrequencyResponseUnderlay::updatePlot (const std::vector<double>& frequenci
                          getLocalBounds().getCentreY() - yFactor * std::log (magnitudes [frequency]) / std::log (2));
     }
     
-    DBG ((int) plotPath.isEmpty());
+    PathStrokeType hitPathStroke (6.0f);
+    hitPathStroke.createStrokedPath (hitPath, plotPath);
+    
+    PathStrokeType plotPathStroke (2.0f);
+    plotPathStroke.createStrokedPath (plotPath, plotPath);
     
     repaint();
+}
+
+//==============================================================================
+bool FrequencyResponseUnderlay::hitTest (int x, int y)
+{
+    if (hitPath.contains (x, y))
+        return true;
+    
+    return false;
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "JuceHeader.h"
+#include "Utilities.h"
 
 //==============================================================================
 class EasyEqAudioProcessor : public AudioProcessor,
@@ -54,8 +55,6 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
     
-    
-
 private:
     //==============================================================================
     AudioProcessorValueTreeState state;

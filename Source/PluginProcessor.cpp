@@ -142,8 +142,6 @@ void EasyEqAudioProcessor::updateBand (const int bandId)
     if (! isPositiveAndBelow (bandId, 8))
         return;
     
-    DBG ("Update band");
-    
     const auto bandNumber = std::to_string (bandId);
     const auto frequency = *state.getRawParameterValue (ParameterNames::frequency + "_band" + bandNumber);
     const auto gain = *state.getRawParameterValue (ParameterNames::gain + "_band" + bandNumber);
@@ -190,13 +188,13 @@ void EasyEqAudioProcessor::updateBand (const int bandId)
     }
     
     if (bandId == 0)    *equaliser.get<0>().state = *newCoeffs;
-    if (bandId == 1)    *equaliser.get<1>().state = *newCoeffs;
-    if (bandId == 2)    *equaliser.get<2>().state = *newCoeffs;
-    if (bandId == 3)    *equaliser.get<3>().state = *newCoeffs;
-    if (bandId == 4)    *equaliser.get<4>().state = *newCoeffs;
-    if (bandId == 5)    *equaliser.get<5>().state = *newCoeffs;
-    if (bandId == 6)    *equaliser.get<6>().state = *newCoeffs;
-    if (bandId == 7)    *equaliser.get<7>().state = *newCoeffs;
+    else if (bandId == 1)    *equaliser.get<1>().state = *newCoeffs;
+    else if (bandId == 2)    *equaliser.get<2>().state = *newCoeffs;
+    else if (bandId == 3)    *equaliser.get<3>().state = *newCoeffs;
+    else if (bandId == 4)    *equaliser.get<4>().state = *newCoeffs;
+    else if (bandId == 5)    *equaliser.get<5>().state = *newCoeffs;
+    else if (bandId == 6)    *equaliser.get<6>().state = *newCoeffs;
+    else if (bandId == 7)    *equaliser.get<7>().state = *newCoeffs;
     
     newCoeffs->getMagnitudeForFrequencyArray (frequencies.data(), magnitudes.data(),
                                               frequencies.size(), currentSampleRate);
