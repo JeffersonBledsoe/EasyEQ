@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="nkNVLf" name="EasyEQ" projectType="audioplug" jucerVersion="5.4.1">
+<JUCERPROJECT id="nkNVLf" name="EasyEQ" projectType="audioplug" jucerVersion="5.4.2"
+              companyName="Jefferson Bledsoe" companyWebsite="jeffersonbledsoe.com"
+              companyEmail="me@jeffersonbledsoe.com" pluginAAXCategory="1"
+              pluginVST3Category="EQ" pluginRTASCategory="1" pluginFormats="buildAU,buildStandalone,buildVST3">
   <MAINGROUP id="XZuJSb" name="EasyEQ">
     <GROUP id="{235C9E8B-B981-66CA-E662-06B71A924845}" name="Source">
       <FILE id="t81UFr" name="BandHandle.cpp" compile="1" resource="0" file="Source/BandHandle.cpp"/>
