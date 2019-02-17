@@ -101,9 +101,8 @@ EasyEqAudioProcessor::EasyEqAudioProcessor()
     }
     
     frequencies.resize (1000);
-    for (auto i {0}; i < frequencies.size(); ++i) {
+    for (auto i {0}; i < frequencies.size(); ++i)
         frequencies [i] = 20.0 * std::pow (2.0, i / 100.0);
-    }
     magnitudes.resize (frequencies.size());
 }
 
@@ -130,12 +129,10 @@ void EasyEqAudioProcessor::parameterChanged (const String& parameterId, float ne
         equaliser.setBypassed<7> (*state.getRawParameterValue (ParameterNames::bypass + "_band" + std::to_string (7)));
     }
     else
-    {
         updateBand (bandId);
-    }
 }
 
-void EasyEqAudioProcessor::updateBand (int bandId)
+void EasyEqAudioProcessor::updateBand (const int bandId)
 {
     if (currentSampleRate < 1)
         return;
@@ -203,11 +200,8 @@ void EasyEqAudioProcessor::updateBand (int bandId)
     
     newCoeffs->getMagnitudeForFrequencyArray (frequencies.data(), magnitudes.data(),
                                               frequencies.size(), currentSampleRate);
-    if (magnitudes.size() > 0)
-    {
-        DBG ("Send change");
+    if (getActiveEditor() != nullptr)
         sendChangeMessage();
-    }
 }
 
 //==============================================================================

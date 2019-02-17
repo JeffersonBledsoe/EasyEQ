@@ -61,7 +61,7 @@ private:
     AudioProcessorValueTreeState state;
     using EqBand = dsp::ProcessorDuplicator<dsp::IIR::Filter<float>, dsp::IIR::Coefficients<float>>;
     dsp::ProcessorChain<EqBand, EqBand, EqBand, EqBand, EqBand, EqBand, EqBand, EqBand> equaliser;
-    void updateBand (int bandId);
+    void updateBand (const int bandId);
     
     //==============================================================================
     double currentSampleRate { 0 };
