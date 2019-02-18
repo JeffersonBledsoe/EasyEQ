@@ -90,13 +90,13 @@ void ControlPanel::parameterChanged (const String& parameterId, float newValue)
 //==============================================================================
 void ControlPanel::paint (Graphics& g)
 {
-    g.setColour (getLookAndFeel().findColour (ResizableWindow::backgroundColourId).brighter (0.1f));
+    g.setColour (getLookAndFeel().findColour (ResizableWindow::backgroundColourId).brighter (0.05f));
     g.fillRoundedRectangle (getLocalBounds().toFloat(), 10);
 }
 
 void ControlPanel::resized()
 {
-    auto bounds = getLocalBounds().reduced (3, proportionOfHeight (0.05f));
+    auto bounds = getLocalBounds().reduced (3, proportionOfHeight (0.07f));
     
     FlexBox flex;
     flex.flexDirection = FlexBox::Direction::row;
@@ -104,7 +104,7 @@ void ControlPanel::resized()
     flex.items.add (FlexItem (frequencySlider).withFlex (2));
     flex.items.add (FlexItem (gainSlider).withFlex (3));
     flex.items.add (FlexItem (qSlider).withFlex (2));
-    flex.items.add (FlexItem (shapeSelector).withFlex (2).withHeight (50));
-    flex.items.add (FlexItem (bypassButton).withFlex (2).withHeight (20));
+    flex.items.add (FlexItem (shapeSelector).withFlex (2).withHeight (40).withAlignSelf (FlexItem::AlignSelf::center));
+    flex.items.add (FlexItem (bypassButton).withFlex (2).withHeight (20).withAlignSelf (FlexItem::AlignSelf::center));
     flex.performLayout (bounds);
 }
