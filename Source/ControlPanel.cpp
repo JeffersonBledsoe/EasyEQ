@@ -104,7 +104,12 @@ void ControlPanel::resized()
     flex.items.add (FlexItem (frequencySlider).withFlex (2));
     flex.items.add (FlexItem (gainSlider).withFlex (3));
     flex.items.add (FlexItem (qSlider).withFlex (2));
-    flex.items.add (FlexItem (shapeSelector).withFlex (2).withHeight (40).withAlignSelf (FlexItem::AlignSelf::center));
-    flex.items.add (FlexItem (bypassButton).withFlex (2).withHeight (20).withAlignSelf (FlexItem::AlignSelf::center));
+    
+    FlexBox endColumn;
+    endColumn.flexDirection = FlexBox::Direction::column;
+    endColumn.items.add (FlexItem (bypassButton).withFlex (2));
+    endColumn.items.add (FlexItem (shapeSelector).withFlex (3));
+    
+    flex.items.add (FlexItem (endColumn).withFlex (2));
     flex.performLayout (bounds);
 }
