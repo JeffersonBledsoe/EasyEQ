@@ -8,6 +8,10 @@
     <GROUP id="{235C9E8B-B981-66CA-E662-06B71A924845}" name="Source">
       <FILE id="t81UFr" name="BandHandle.cpp" compile="1" resource="0" file="Source/BandHandle.cpp"/>
       <FILE id="p6BYTV" name="BandHandle.h" compile="0" resource="0" file="Source/BandHandle.h"/>
+      <FILE id="wB4OFg" name="EasyEqLookAndFeel.cpp" compile="1" resource="0"
+            file="Source/EasyEqLookAndFeel.cpp"/>
+      <FILE id="bEA6G1" name="EasyEqLookAndFeel.h" compile="0" resource="0"
+            file="Source/EasyEqLookAndFeel.h"/>
       <FILE id="YG6AIC" name="ControlPanel.cpp" compile="1" resource="0"
             file="Source/ControlPanel.cpp"/>
       <FILE id="d0dfmd" name="ControlPanel.h" compile="0" resource="0" file="Source/ControlPanel.h"/>

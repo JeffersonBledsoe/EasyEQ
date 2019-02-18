@@ -4,6 +4,7 @@
 #include "PluginProcessor.h"
 #include "ControlPanel.h"
 #include "BandHandle.h"
+#include "EasyEqLookAndFeel.h"
 
 //==============================================================================
 class EasyEqAudioProcessorEditor : public AudioProcessorEditor,
@@ -25,6 +26,7 @@ private:
     //==========================================================================
     EasyEqAudioProcessor& processor;
     AudioProcessorValueTreeState& state;
+    EasyEqLookAndFeel laf;
     
     //==========================================================================
     OwnedArray<BandHandle> handles;

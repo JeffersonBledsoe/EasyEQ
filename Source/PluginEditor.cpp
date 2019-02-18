@@ -7,9 +7,7 @@ EasyEqAudioProcessorEditor::EasyEqAudioProcessorEditor (EasyEqAudioProcessor& p,
                                                         AudioProcessorValueTreeState& s)
 : AudioProcessorEditor (&p), processor (p), state (s), controlPanel (s)
 {
-    auto* laf = dynamic_cast<LookAndFeel_V4*> (&getLookAndFeel());
-    laf->setColour (DocumentWindow::backgroundColourId, Colour::fromRGB (44, 44, 44));
-    lookAndFeelChanged();
+    setLookAndFeel (&laf);
     
     for (auto i {0}; i < 8; ++i)
     {
@@ -38,6 +36,8 @@ EasyEqAudioProcessorEditor::~EasyEqAudioProcessorEditor()
 {
     for (auto i {0}; i < 8; ++i)
         state.removeParameterListener (ParameterNames::enabled + "_band" + std::to_string (i), this);
+    
+    setLookAndFeel (nullptr);
 }
 
 //==============================================================================
