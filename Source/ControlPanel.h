@@ -27,13 +27,13 @@ private:
     //==========================================================================
     Label bandName;
     
-    Slider frequencySlider { Slider::RotaryVerticalDrag, Slider::TextBoxBelow };
+    Slider frequencySlider { Slider::RotaryVerticalDrag, Slider::NoTextBox };
     std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> frequencyAttachment;
     
-    Slider gainSlider { Slider::RotaryVerticalDrag, Slider::TextBoxBelow };
+    Slider gainSlider { Slider::RotaryVerticalDrag, Slider::NoTextBox };
     std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> gainAttachment;
     
-    Slider qSlider { Slider::RotaryVerticalDrag, Slider::TextBoxBelow };
+    Slider qSlider { Slider::RotaryVerticalDrag, Slider::NoTextBox };
     std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> qAttachment;
     
     ToggleButton bypassButton;

@@ -3,8 +3,8 @@
 EasyEqLookAndFeel::EasyEqLookAndFeel()
 {
     setColour (DocumentWindow::backgroundColourId, Colour::fromRGB (44, 44, 44));
-    setColour (Slider::rotarySliderOutlineColourId, Colours::black.brighter (0.4f));
-    setColour (Slider::rotarySliderFillColourId, Colours::black.brighter (0.9f));
+    setColour (Slider::rotarySliderOutlineColourId, Colours::black.brighter (0.25f));
+    setColour (Slider::rotarySliderFillColourId, Colours::white.darker (0.1f));
 }
 
 //==============================================================================
@@ -18,7 +18,7 @@ void EasyEqLookAndFeel::drawRotarySlider (Graphics& g, int x, int y, int width, 
     
     auto radius = jmin (bounds.getWidth(), bounds.getHeight()) / 2.0f;
     auto toAngle = rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
-    auto lineW = jmin (6.0f, radius * 0.3f);
+    const auto lineW = 3.0f;
     auto arcRadius = radius - lineW * 0.5f;
     
     Path backgroundArc;
@@ -50,10 +50,6 @@ void EasyEqLookAndFeel::drawRotarySlider (Graphics& g, int x, int y, int width, 
         g.strokePath (valueArc, PathStrokeType (lineW, PathStrokeType::curved, PathStrokeType::rounded));
     }
     
-//    auto thumbWidth = lineW * 2.0f;
-//    Point<float> thumbPoint (bounds.getCentreX() + arcRadius * std::cos (toAngle - MathConstants<float>::halfPi),
-//                             bounds.getCentreY() + arcRadius * std::sin (toAngle - MathConstants<float>::halfPi));
-//
-//    g.setColour (slider.findColour (Slider::thumbColourId));
-//    g.fillEllipse (Rectangle<float> (thumbWidth, thumbWidth).withCentre (thumbPoint));
+    g.setColour (Colours::white);
+    g.drawText (String (slider.getValue()), bounds.reduced (lineW), Justification::centred);
 }
