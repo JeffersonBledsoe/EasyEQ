@@ -3,7 +3,6 @@
 #include "JuceHeader.h"
 #include "PluginProcessor.h"
 #include "ControlPanel.h"
-#include "FrequencyResponseUnderlay.h"
 #include "BandHandle.h"
 
 //==============================================================================
@@ -17,6 +16,7 @@ public:
     ~EasyEqAudioProcessorEditor();
 
     //==========================================================================
+    void paint (Graphics& g) override;
     void resized() override;
     
     //==========================================================================
@@ -28,17 +28,22 @@ private:
     AudioProcessorValueTreeState& state;
     
     //==========================================================================
+    OwnedArray<BandHandle> handles;
     int selectedBandId {-1};
     
     //==========================================================================
-    FrequencyResponseUnderlay frequencyResponse;
-    OwnedArray<BandHandle> handles;
+    Path frequencyResponsePlotPath, frequencyResponseHitPath;
+    void updatePlot (const std::vector<double>& frequencies, const std::vector<double>& magnitudes);
+    Point<float> mouseDownPosition;
+    
+    //==========================================================================
     ControlPanel controlPanel;
     
     //==========================================================================
     void changeListenerCallback (ChangeBroadcaster* broadcaster) override;
     void mouseDown (const MouseEvent& event) override;
     void mouseDoubleClick (const MouseEvent& event) override;
+    void mouseDrag (const MouseEvent& event) override;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EasyEqAudioProcessorEditor)
 };

@@ -11,10 +11,6 @@
       <FILE id="YG6AIC" name="ControlPanel.cpp" compile="1" resource="0"
             file="Source/ControlPanel.cpp"/>
       <FILE id="d0dfmd" name="ControlPanel.h" compile="0" resource="0" file="Source/ControlPanel.h"/>
-      <FILE id="JI5Dup" name="FrequencyResponseUnderlay.cpp" compile="1"
-            resource="0" file="Source/FrequencyResponseUnderlay.cpp"/>
-      <FILE id="pvIGdq" name="FrequencyResponseUnderlay.h" compile="0" resource="0"
-            file="Source/FrequencyResponseUnderlay.h"/>
       <FILE id="mFrKK1" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="IEq5Ag" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>

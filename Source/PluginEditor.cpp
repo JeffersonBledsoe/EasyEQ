@@ -10,8 +10,7 @@ EasyEqAudioProcessorEditor::EasyEqAudioProcessorEditor (EasyEqAudioProcessor& p,
     auto* laf = dynamic_cast<LookAndFeel_V4*> (&getLookAndFeel());
     laf->setColour (DocumentWindow::backgroundColourId, Colour::fromRGB (44, 44, 44));
     lookAndFeelChanged();
-    
-    addAndMakeVisible (frequencyResponse);
+
     addAndMakeVisible (controlPanel);
     
     for (auto i {0}; i < 8; ++i)
@@ -31,12 +30,10 @@ EasyEqAudioProcessorEditor::EasyEqAudioProcessorEditor (EasyEqAudioProcessor& p,
         }
     }
     
-    frequencyResponse.addMouseListener (this, false);
-    
     setSize (1000, 600);
     
     processor.addChangeListener (this);
-    frequencyResponse.updatePlot (processor.getFrequencies(), processor.getMagnitudes());
+    updatePlot (processor.getFrequencies(), processor.getMagnitudes());
 }
 
 EasyEqAudioProcessorEditor::~EasyEqAudioProcessorEditor()
@@ -46,22 +43,25 @@ EasyEqAudioProcessorEditor::~EasyEqAudioProcessorEditor()
 }
 
 //==============================================================================
-void EasyEqAudioProcessorEditor::resized()
+void EasyEqAudioProcessorEditor::paint (Graphics& g)
 {
-    auto bounds = getLocalBounds();
+    g.setColour (getLookAndFeel().findColour (ResizableWindow::backgroundColourId) );
+    g.fillRect (getLocalBounds());
     
-    auto handleArea = bounds.removeFromTop (proportionOfHeight (0.8f));
-    
-    frequencyResponse.setBounds (handleArea);
-    
-    controlPanel.setBounds (bounds);
+    g.setColour (Colour::fromRGB (235, 235, 235));
+    g.fillPath (frequencyResponsePlotPath);
+}
+
+void EasyEqAudioProcessorEditor::resized()
+{    
+    controlPanel.setBounds (getLocalBounds().removeFromBottom (proportionOfHeight (0.2f)));
 }
 
 //==============================================================================
 void EasyEqAudioProcessorEditor::changeListenerCallback (ChangeBroadcaster* broadcaster)
 {
     if (auto* p = dynamic_cast<EasyEqAudioProcessor*> (broadcaster))
-        frequencyResponse.updatePlot (processor.getFrequencies(), processor.getMagnitudes());
+        updatePlot (processor.getFrequencies(), processor.getMagnitudes());
     else
         DBG ("change received from unknown source");
 }
@@ -92,10 +92,13 @@ void EasyEqAudioProcessorEditor::mouseDown (const MouseEvent& event)
     {
         selectedBandId = handle->getBandId();
         controlPanel.setSelectedBand (selectedBandId);
-        frequencyResponse.updatePlot (processor.getFrequencies(), processor.getMagnitudes());
+        updatePlot (processor.getFrequencies(), processor.getMagnitudes());
     }
     else
+    {
+        mouseDownPosition = event.position;
         DBG ("Original component: " + event.originalComponent->getName());
+    }
 }
 
 void EasyEqAudioProcessorEditor::mouseDoubleClick (const MouseEvent& event)
@@ -132,4 +135,41 @@ void EasyEqAudioProcessorEditor::mouseDoubleClick (const MouseEvent& event)
             return;
         }
     }
+}
+
+void EasyEqAudioProcessorEditor::mouseDrag (const MouseEvent& event)
+{
+    if (frequencyResponseHitPath.contains (mouseDownPosition))
+    {
+        DBG ("Dragging curve");
+    }
+}
+
+//==============================================================================
+void EasyEqAudioProcessorEditor::updatePlot (const std::vector<double>& frequencies, const std::vector<double>& magnitudes)
+{
+    if (frequencies.size() < 1 || magnitudes.size() < 1)
+        return;
+    
+    frequencyResponsePlotPath.clear();
+    
+    const auto yFactor = getHeight() / Decibels::gainToDecibels (2.0);
+    const auto xFactor = getWidth() / frequencies.size();
+    
+    frequencyResponsePlotPath.startNewSubPath (getX(),
+                              getLocalBounds().getCentreY() - yFactor * std::log (magnitudes[0]) / std::log (2));
+    
+    for (auto frequency {1}; frequency < frequencies.size(); ++frequency)
+    {
+        frequencyResponsePlotPath.lineTo (getX() + frequency * xFactor,
+                         getLocalBounds().getCentreY() - yFactor * std::log (magnitudes[frequency]) / std::log (2));
+    }
+    
+    PathStrokeType frequencyResponseHitPathStroke (6.0f);
+    frequencyResponseHitPathStroke.createStrokedPath (frequencyResponseHitPath, frequencyResponsePlotPath);
+    
+    PathStrokeType frequencyResponsePlotPathStroke (3.0f);
+    frequencyResponsePlotPathStroke.createStrokedPath (frequencyResponsePlotPath, frequencyResponsePlotPath);
+    
+    repaint();
 }
