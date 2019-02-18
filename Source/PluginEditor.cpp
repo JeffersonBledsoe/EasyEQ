@@ -31,7 +31,7 @@ EasyEqAudioProcessorEditor::EasyEqAudioProcessorEditor (EasyEqAudioProcessor& p,
     
     processor.addChangeListener (this);
     updatePlot (processor.getFrequencies(), processor.getMagnitudes());
-    addAndMakeVisible (controlPanel);
+    addChildComponent (controlPanel);
 }
 
 EasyEqAudioProcessorEditor::~EasyEqAudioProcessorEditor()
@@ -140,6 +140,8 @@ void EasyEqAudioProcessorEditor::mouseDrag (const MouseEvent& event)
 //==============================================================================
 void EasyEqAudioProcessorEditor::updateControlPanelPosition (const Point<float> position)
 {
+    controlPanel.setVisible (true);
+    
     const auto controlPanelTop = getHeight() - proportionOfHeight (0.15f);
     const auto controlPanelRadius = controlPanel.getWidth() / 2.0f;
     

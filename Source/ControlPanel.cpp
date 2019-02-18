@@ -31,6 +31,8 @@ ControlPanel::ControlPanel (AudioProcessorValueTreeState& s)
     qSlider.setEnabled (false);
     shapeSelector.setEnabled (false);
     bypassButton.setEnabled (false);
+    
+    setSize (500, 120);
 }
 
 //==============================================================================
@@ -65,8 +67,6 @@ void ControlPanel::setSelectedBand (int bandId)
     
     frequencySlider.setSkewFactor (500);
     frequencySlider.textFromValueFunction = [this] (double value) { return String (std::exp (std::log (value))); };
-    
-    setSize (500, 120);
 }
 
 ControlPanel::~ControlPanel()
