@@ -31,8 +31,6 @@ ControlPanel::ControlPanel (AudioProcessorValueTreeState& s)
     qSlider.setEnabled (false);
     shapeSelector.setEnabled (false);
     bypassButton.setEnabled (false);
-    
-    setOpaque (true);
 }
 
 //==============================================================================
@@ -67,7 +65,8 @@ void ControlPanel::setSelectedBand (int bandId)
     
     frequencySlider.setSkewFactor (500);
     frequencySlider.textFromValueFunction = [this] (double value) { return String (std::exp (std::log (value))); };
-//    frequencySlider.textFromValueFunction = [this] (double value) { return String (20.0 * std::pow (2.0, value / 100.0)); };
+    
+    setSize (500, 120);
 }
 
 ControlPanel::~ControlPanel()
@@ -92,10 +91,7 @@ void ControlPanel::parameterChanged (const String& parameterId, float newValue)
 void ControlPanel::paint (Graphics& g)
 {
     g.setColour (getLookAndFeel().findColour (ResizableWindow::backgroundColourId).brighter (0.1f));
-    g.fillRect (getLocalBounds());
-
-    g.setColour (Colours::grey);
-    g.drawRect (getLocalBounds(), 1);
+    g.fillRoundedRectangle (getLocalBounds().toFloat(), 10);
 }
 
 void ControlPanel::resized()

@@ -17,7 +17,6 @@ public:
 
     //==========================================================================
     void paint (Graphics& g) override;
-    void resized() override;
     
     //==========================================================================
     void parameterChanged (const String& parameterId, float newValue) override;
@@ -29,7 +28,7 @@ private:
     
     //==========================================================================
     OwnedArray<BandHandle> handles;
-    int selectedBandId {-1};
+    BandHandle* selectedHandle = nullptr;
     
     //==========================================================================
     Path frequencyResponsePlotPath, frequencyResponseHitPath;
@@ -38,6 +37,7 @@ private:
     
     //==========================================================================
     ControlPanel controlPanel;
+    void updateControlPanelPosition (const Point<float> position);
     
     //==========================================================================
     void changeListenerCallback (ChangeBroadcaster* broadcaster) override;

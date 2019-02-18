@@ -10,8 +10,6 @@ EasyEqAudioProcessorEditor::EasyEqAudioProcessorEditor (EasyEqAudioProcessor& p,
     auto* laf = dynamic_cast<LookAndFeel_V4*> (&getLookAndFeel());
     laf->setColour (DocumentWindow::backgroundColourId, Colour::fromRGB (44, 44, 44));
     lookAndFeelChanged();
-
-    addAndMakeVisible (controlPanel);
     
     for (auto i {0}; i < 8; ++i)
     {
@@ -25,7 +23,6 @@ EasyEqAudioProcessorEditor::EasyEqAudioProcessorEditor (EasyEqAudioProcessor& p,
             auto* handle = handles.add (new BandHandle (i, state));
             addAndMakeVisible (handle);
             handle->addMouseListener (this, true);
-            selectedBandId = handle->getBandId();
             resized();
         }
     }
@@ -34,6 +31,7 @@ EasyEqAudioProcessorEditor::EasyEqAudioProcessorEditor (EasyEqAudioProcessor& p,
     
     processor.addChangeListener (this);
     updatePlot (processor.getFrequencies(), processor.getMagnitudes());
+    addAndMakeVisible (controlPanel);
 }
 
 EasyEqAudioProcessorEditor::~EasyEqAudioProcessorEditor()
@@ -50,11 +48,6 @@ void EasyEqAudioProcessorEditor::paint (Graphics& g)
     
     g.setColour (Colour::fromRGB (235, 235, 235));
     g.fillPath (frequencyResponsePlotPath);
-}
-
-void EasyEqAudioProcessorEditor::resized()
-{    
-    controlPanel.setBounds (getLocalBounds().removeFromBottom (proportionOfHeight (0.2f)));
 }
 
 //==============================================================================
@@ -75,8 +68,8 @@ void EasyEqAudioProcessorEditor::parameterChanged (const String& parameterId, fl
         auto* handle = handles.add (new BandHandle (bandId, state));
         addAndMakeVisible (handle);
         handle->addMouseListener (this, true);
-        selectedBandId = handle->getBandId();
-        resized();
+        selectedHandle = handle;
+        updateControlPanelPosition (handle->getBoundsInParent().getCentre().toFloat());
     }
     else
     {
@@ -88,16 +81,13 @@ void EasyEqAudioProcessorEditor::parameterChanged (const String& parameterId, fl
 //==============================================================================
 void EasyEqAudioProcessorEditor::mouseDown (const MouseEvent& event)
 {
+    mouseDownPosition = event.getEventRelativeTo (this).position;
+    
     if (auto* handle = dynamic_cast<BandHandle*> (event.originalComponent))
     {
-        selectedBandId = handle->getBandId();
-        controlPanel.setSelectedBand (selectedBandId);
-        updatePlot (processor.getFrequencies(), processor.getMagnitudes());
-    }
-    else
-    {
-        mouseDownPosition = event.position;
-        DBG ("Original component: " + event.originalComponent->getName());
+        selectedHandle = handle;
+        controlPanel.setSelectedBand (selectedHandle->getBandId());
+        updateControlPanelPosition (handle->getBoundsInParent().getCentre().toFloat());
     }
 }
 
@@ -143,6 +133,19 @@ void EasyEqAudioProcessorEditor::mouseDrag (const MouseEvent& event)
     {
         DBG ("Dragging curve");
     }
+    else if (event.originalComponent == selectedHandle)
+        updateControlPanelPosition (mouseDownPosition + event.getOffsetFromDragStart().toFloat());
+}
+
+//==============================================================================
+void EasyEqAudioProcessorEditor::updateControlPanelPosition (const Point<float> position)
+{
+    const auto controlPanelTop = getHeight() - proportionOfHeight (0.15f);
+    const auto controlPanelRadius = controlPanel.getWidth() / 2.0f;
+    
+    const auto controlPanelX = jlimit (controlPanelRadius, getWidth() - controlPanelRadius, position.x);
+    
+    controlPanel.setCentrePosition (controlPanelX, controlPanelTop);
 }
 
 //==============================================================================
