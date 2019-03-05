@@ -60,7 +60,7 @@ public:
     {
         Band (const int bandIdToUse,
               float frequencyToUse, float qToUse, FilterShape shapeToUse,
-              float gainToUse = 1.0f, bool shouldBypass = false, bool enabled = false)
+              float gainToUse = 0.0f, bool shouldBypass = false, bool enabled = false)
         : bandId (bandIdToUse),
           frequency (frequencyToUse), q (qToUse), shape (shapeToUse),
           gain (gainToUse), bypassed (shouldBypass), isEnabled (enabled)

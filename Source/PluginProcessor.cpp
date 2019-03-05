@@ -52,7 +52,7 @@ AudioProcessorValueTreeState::ParameterLayout createParameters()
                                                                                                       .substring (0, 6).trimCharactersAtEnd ("."); },
                                                                 [] (String text) { return valueToNormalisedFrequency (text.getFloatValue()); });
         auto gain = std::make_unique<AudioParameterFloat> (ParameterNames::gain + "_band" + bandId, "Band " + bandId + " Gain",
-                                                           NormalisableRange<float> (-145.0f, 6.0f), 2.0f,
+                                                           NormalisableRange<float> (-24.0f, 24.0f), 0.0f,
                                                            "dB", AudioProcessorParameter::genericParameter,
                                                            [] (float value, int) { return gainToFloat (value); },
                                                            [] (const String& text) { return Decibels::decibelsToGain (text.getFloatValue()); });
