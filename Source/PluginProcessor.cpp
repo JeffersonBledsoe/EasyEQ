@@ -143,6 +143,8 @@ void EasyEqAudioProcessor::parameterChanged (const String& parameterId, float ne
     
     if (parameterId.containsIgnoreCase (ParameterNames::bypass))
     {
+        bands[bandId].bypassed = newValue > 0.5f ? true : false;
+        
         equaliser.setBypassed<0> (*state.getRawParameterValue (ParameterNames::bypass + "_band" + std::to_string (0)));
         equaliser.setBypassed<1> (*state.getRawParameterValue (ParameterNames::bypass + "_band" + std::to_string (1)));
         equaliser.setBypassed<2> (*state.getRawParameterValue (ParameterNames::bypass + "_band" + std::to_string (2)));
@@ -151,6 +153,8 @@ void EasyEqAudioProcessor::parameterChanged (const String& parameterId, float ne
         equaliser.setBypassed<5> (*state.getRawParameterValue (ParameterNames::bypass + "_band" + std::to_string (5)));
         equaliser.setBypassed<6> (*state.getRawParameterValue (ParameterNames::bypass + "_band" + std::to_string (6)));
         equaliser.setBypassed<7> (*state.getRawParameterValue (ParameterNames::bypass + "_band" + std::to_string (7)));
+        
+        updateFrequencyResponse();
     }
     else
     {
@@ -239,9 +243,6 @@ void EasyEqAudioProcessor::updateBand (const int bandId)
                                               frequencies.size(), currentSampleRate);
     
     updateFrequencyResponse();
-    
-    if (getActiveEditor() != nullptr)
-        sendChangeMessage();
 }
 
 void EasyEqAudioProcessor::updateFrequencyResponse()
@@ -249,8 +250,11 @@ void EasyEqAudioProcessor::updateFrequencyResponse()
     std::fill (totalMagnitudes.begin(), totalMagnitudes.end(), 1.0f);
     
     for (auto i {0}; i < bands.size(); ++i)
-        if (bands[i].isEnabled)
+        if (bands[i].isEnabled && ! bands[i].bypassed)
             FloatVectorOperations::multiply (totalMagnitudes.data(), bands[i].magnitudes.data(), static_cast<int> (totalMagnitudes.size()));
+    
+    if (getActiveEditor() != nullptr)
+        sendChangeMessage();
 }
 
 //==============================================================================
