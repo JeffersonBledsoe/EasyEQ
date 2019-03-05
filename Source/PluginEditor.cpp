@@ -182,7 +182,7 @@ void EasyEqAudioProcessorEditor::updatePlot (const std::vector<double>& frequenc
     const auto xFactor = getWidth() / frequencies.size();
     
     frequencyResponsePlotPath.startNewSubPath (getX(),
-                              getLocalBounds().getCentreY() - yFactor * std::log (magnitudes[0]) / std::log (2));
+                                               getLocalBounds().getCentreY() - yFactor * std::log (magnitudes[0]) / std::log (2));
     
     for (auto frequency {1}; frequency < frequencies.size(); ++frequency)
     {

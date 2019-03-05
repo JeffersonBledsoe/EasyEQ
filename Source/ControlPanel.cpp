@@ -38,13 +38,15 @@ ControlPanel::ControlPanel (AudioProcessorValueTreeState& s)
 //==============================================================================
 void ControlPanel::setSelectedBand (int bandId)
 {
-    state.removeParameterListener ("shape_band" + std::to_string (currentBandId), this);
-    frequencyAttachment.reset();
-    gainAttachment.reset();
-    qAttachment.reset();
-    bypassAttachment.reset();
-    shapeAttachment.reset();
-    shapeSelector.clear();
+    {
+        state.removeParameterListener ("shape_band" + std::to_string (currentBandId), this);
+        frequencyAttachment.reset();
+        gainAttachment.reset();
+        qAttachment.reset();
+        bypassAttachment.reset();
+        shapeAttachment.reset();
+        shapeSelector.clear();
+    }
     
     currentBandId = bandId;
     const auto bandNumber = std::to_string (bandId);
@@ -60,14 +62,15 @@ void ControlPanel::setSelectedBand (int bandId)
     shapeSelector.setEnabled (true);
     bypassButton.setEnabled (true);
     
-    frequencyAttachment = std::make_unique<SliderAttachment> (state, "frequency_band" + bandNumber, frequencySlider);
-    gainAttachment = std::make_unique<SliderAttachment> (state, "gain_band" + bandNumber, gainSlider);
+    frequencySlider.setSkewFactor (1000.0);
+    
+    frequencyAttachment.reset (new SliderAttachment (state, "frequency_band" + bandNumber, frequencySlider));
+    gainAttachment.reset (new SliderAttachment (state, "gain_band" + bandNumber, gainSlider));
     qAttachment = std::make_unique<SliderAttachment> (state, "q_band" + bandNumber, qSlider);
     bypassAttachment = std::make_unique<ButtonAttachment> (state, "bypass_band" + bandNumber, bypassButton);
     shapeAttachment = std::make_unique<ComboBoxAttachment> (state, "shape_band" + bandNumber, shapeSelector);
     
-    frequencySlider.setSkewFactor (500);
-    frequencySlider.textFromValueFunction = [this] (double value) { return String (std::exp (std::log (value))); };
+    frequencySlider.setSkewFactor (1000.0);
 }
 
 ControlPanel::~ControlPanel()

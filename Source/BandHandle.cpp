@@ -67,10 +67,10 @@ void BandHandle::update()
 {
     if (thisComponent != this || thisComponent == nullptr)
         return;
-    
-    const auto x = frequencyParam->getNormalisableRange().convertTo0to1 (*frequencyParam) * getParentWidth();
-    const auto y = gainParam->getNormalisableRange().convertTo0to1 (jlimit (0.1f, 2.0f, 2.0f - *gainParam)) * getParentHeight();
-    
+
+    const auto x = frequencyToNormalisedFrequency (*frequencyParam) * getParentWidth();
+    const auto y = gainParam->getNormalisableRange().convertTo0to1 (*gainParam) * getParentHeight();
+
     setCentrePosition (x, y);
     repaint();
 }

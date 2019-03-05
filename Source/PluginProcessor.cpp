@@ -37,6 +37,19 @@ StringArray getFilterShapeNames()
     return shapes;
 }
 
+auto valueToTextFunc = [](float v, int)
+{
+    if (v>=-144.0f)
+        return String(v);
+    return String(CharPointer_UTF8("-∞"));
+};
+auto textToValueFunc = [](const String& txt)
+{
+    if (txt == CharPointer_UTF8("-∞"))
+        return -145.0f;
+    return txt.getFloatValue();
+};
+
 //==============================================================================
 AudioProcessorValueTreeState::ParameterLayout createParameters()
 {
@@ -45,25 +58,26 @@ AudioProcessorValueTreeState::ParameterLayout createParameters()
     for (auto i {0}; i < 8; ++i)
     {
         const auto bandId = std::to_string (i);
-        auto frequency = std::make_unique<AudioParameterFloat> (ParameterNames::frequency + "_band" + bandId, "Band " + bandId + "Frequency",
+        auto frequency = std::make_unique<AudioParameterFloat> (ParameterNames::frequency + "_band" + bandId, "Band " + bandId + " Frequency",
                                                                 NormalisableRange<float> (20.0f, 20000.0f), 1000.0f,
                                                                 "Hz", AudioProcessorParameter::genericParameter,
-                                                                [] (float value, int) { return String (value, 0).substring (0, 6).trimCharactersAtEnd ("."); },
-                                                                [] (String text) { return text.substring (0, 6).getFloatValue(); });
-        auto gain = std::make_unique<AudioParameterFloat> (ParameterNames::gain + "_band" + bandId, "Band " + bandId + "Gain",
-                                                           NormalisableRange<float> (0.0001f, 2.0f), 1.0f,
+                                                                [] (float value, int) { return String (normalisedFrequencyToFrequency (value), 0)
+                                                                                                      .substring (0, 6).trimCharactersAtEnd ("."); },
+                                                                [] (String text) { return frequencyToNormalisedFrequency (text.getFloatValue()); });
+        auto gain = std::make_unique<AudioParameterFloat> (ParameterNames::gain + "_band" + bandId, "Band " + bandId + " Gain",
+                                                           NormalisableRange<float> (-145.0f, 6.0f), 1.0f,
                                                            "dB", AudioProcessorParameter::genericParameter,
                                                            [] (float value, int) { return gainToFloat (value); },
                                                            [] (const String& text) { return Decibels::decibelsToGain (text.getFloatValue()); });
-        auto q = std::make_unique<AudioParameterFloat> (ParameterNames::q + "_band" + bandId, "Band " + bandId + "Q",
+        auto q = std::make_unique<AudioParameterFloat> (ParameterNames::q + "_band" + bandId, "Band " + bandId + " Q",
                                                         NormalisableRange<float> (0.05f, 30.0f), 1.0f,
                                                         String(), AudioProcessorParameter::genericParameter);
-        auto shape = std::make_unique<AudioParameterChoice> (ParameterNames::shape + "_band" + bandId, "Band " + bandId + "Shape",
+        auto shape = std::make_unique<AudioParameterChoice> (ParameterNames::shape + "_band" + bandId, "Band " + bandId + " Shape",
                                                              getFilterShapeNames(), 0);
-        auto bypass = std::make_unique<AudioParameterBool> (ParameterNames::bypass + "_band" + bandId, "Band " + bandId + "Bypass",
+        auto bypass = std::make_unique<AudioParameterBool> (ParameterNames::bypass + "_band" + bandId, "Band " + bandId + " Bypass",
                                                             false, String(),
                                                             [] (bool bypassed, int) { return bypassed ? "Bypassed" : "Active"; });
-        auto enabled = std::make_unique<AudioParameterBool> (ParameterNames::enabled + "_band" + bandId, "Band " + bandId + "Enabled",
+        auto enabled = std::make_unique<AudioParameterBool> (ParameterNames::enabled + "_band" + bandId, "Band " + bandId + " Enabled",
                                                             false, String(),
                                                             [] (bool enabled, int) { return enabled ? "Disabled" : "Enabled"; });
         
@@ -181,7 +195,7 @@ void EasyEqAudioProcessor::updateBand (const int bandId)
     
     const auto bandNumber = std::to_string (bandId);
     const auto frequency = *state.getRawParameterValue (ParameterNames::frequency + "_band" + bandNumber);
-    const auto gain = *state.getRawParameterValue (ParameterNames::gain + "_band" + bandNumber);
+    const auto gain = Decibels::decibelsToGain (*state.getRawParameterValue (ParameterNames::gain + "_band" + bandNumber));
     const auto q = *state.getRawParameterValue (ParameterNames::q + "_band" + bandNumber);
     const auto shape = *state.getRawParameterValue (ParameterNames::shape + "_band" + bandNumber);
     
