@@ -3,7 +3,7 @@
 #include "Utilities.h"
 
 //==============================================================================
-String gainToFloat (float value)
+inline String gainToFloat (float value)
 {
     auto val = String (Decibels::gainToDecibels (value));
     
@@ -37,19 +37,6 @@ StringArray getFilterShapeNames()
     return shapes;
 }
 
-auto valueToTextFunc = [](float v, int)
-{
-    if (v>=-144.0f)
-        return String(v);
-    return String(CharPointer_UTF8("-∞"));
-};
-auto textToValueFunc = [](const String& txt)
-{
-    if (txt == CharPointer_UTF8("-∞"))
-        return -145.0f;
-    return txt.getFloatValue();
-};
-
 //==============================================================================
 AudioProcessorValueTreeState::ParameterLayout createParameters()
 {
@@ -61,11 +48,11 @@ AudioProcessorValueTreeState::ParameterLayout createParameters()
         auto frequency = std::make_unique<AudioParameterFloat> (ParameterNames::frequency + "_band" + bandId, "Band " + bandId + " Frequency",
                                                                 NormalisableRange<float> (20.0f, 20000.0f), 1000.0f,
                                                                 "Hz", AudioProcessorParameter::genericParameter,
-                                                                [] (float value, int) { return String (normalisedFrequencyToFrequency (value), 0)
+                                                                [] (float value, int) { return String (normalisedValueToFrequency (value), 0)
                                                                                                       .substring (0, 6).trimCharactersAtEnd ("."); },
-                                                                [] (String text) { return frequencyToNormalisedFrequency (text.getFloatValue()); });
+                                                                [] (String text) { return valueToNormalisedFrequency (text.getFloatValue()); });
         auto gain = std::make_unique<AudioParameterFloat> (ParameterNames::gain + "_band" + bandId, "Band " + bandId + " Gain",
-                                                           NormalisableRange<float> (-145.0f, 6.0f), 1.0f,
+                                                           NormalisableRange<float> (-145.0f, 6.0f), 2.0f,
                                                            "dB", AudioProcessorParameter::genericParameter,
                                                            [] (float value, int) { return gainToFloat (value); },
                                                            [] (const String& text) { return Decibels::decibelsToGain (text.getFloatValue()); });

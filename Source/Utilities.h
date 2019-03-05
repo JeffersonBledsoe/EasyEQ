@@ -27,12 +27,12 @@ enum FilterShape
 };
 
 //==============================================================================
-inline float frequencyToNormalisedFrequency (float value)
+inline float valueToNormalisedFrequency (float value)
 {
     return std::log (value / 20.0f) / std::log (20000 / 20);
 }
 
-inline float normalisedFrequencyToFrequency (float normalisedValue)
+inline float normalisedValueToFrequency (float normalisedValue)
 {
     return std::exp (normalisedValue * (std::log (20000 / 20) + std::log (20)));
 }

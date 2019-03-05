@@ -131,13 +131,13 @@ void EasyEqAudioProcessorEditor::mouseDoubleClick (const MouseEvent& event)
         {
             enabledParam->setValueNotifyingHost (true);
             
-            const auto proportionalWidth = event.position.x / (double) getWidth();
+            const auto proportionalWidth = event.position.x / double (getWidth());
             const auto proportionalHeight = event.position.y / (double) getHeight();
             
             auto* frequencyParam = static_cast<AudioParameterFloat*> (state.getParameter (ParameterNames::frequency + "_band" + std::to_string (i)));
             auto* gainParam = static_cast<AudioParameterFloat*> (state.getParameter (ParameterNames::gain + "_band" + std::to_string (i)));
             
-            frequencyParam->setValueNotifyingHost (proportionalWidth);
+            frequencyParam->setValueNotifyingHost (valueToNormalisedFrequency (normalisedValueToFrequency (proportionalWidth)));
             gainParam->setValueNotifyingHost (1.0f - proportionalHeight);
             
             controlPanel.setSelectedBand (i);

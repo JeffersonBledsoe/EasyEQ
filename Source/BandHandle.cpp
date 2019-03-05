@@ -68,9 +68,11 @@ void BandHandle::update()
     if (thisComponent != this || thisComponent == nullptr)
         return;
 
-    const auto x = frequencyToNormalisedFrequency (*frequencyParam) * getParentWidth();
-    const auto y = gainParam->getNormalisableRange().convertTo0to1 (*gainParam) * getParentHeight();
-
+    const auto x = frequencyParam->getNormalisableRange().convertTo0to1 (*frequencyParam) * getParentWidth();
+    const auto y = (1.0f - gainParam->getNormalisableRange().convertTo0to1 (*gainParam)) * getParentHeight();
+    
+    DBG (*frequencyParam);
+    DBG (String (x) + " ," + String (y));
     setCentrePosition (x, y);
     repaint();
 }
@@ -120,7 +122,7 @@ void BandHandle::mouseDrag (const MouseEvent& event)
     const auto proportionalWidth = (mouseDownPosition + event.getOffsetFromDragStart().toFloat()).x / (double) getParentWidth();
     const auto proportionalHeight = (mouseDownPosition + event.getOffsetFromDragStart().toFloat()).y / (double) getParentHeight();
     
-    frequencyParam->setValueNotifyingHost (proportionalWidth);
+    frequencyParam->setValueNotifyingHost (valueToNormalisedFrequency (proportionalWidth));
     if (proportionalHeight > 0)
-        gainParam->setValueNotifyingHost (1.0f - proportionalHeight);
+        gainParam->setValueNotifyingHost (Decibels::gainToDecibels (proportionalHeight));
 }
