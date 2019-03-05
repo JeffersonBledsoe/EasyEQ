@@ -9,7 +9,7 @@ using ComboBoxAttachment = AudioProcessorValueTreeState::ComboBoxAttachment;
 
 //==============================================================================
 BandHandle::BandHandle (const int id, AudioProcessorValueTreeState& s)
-: bandId (id), state (s)
+: bandId (id), state (s), colour (BandColours::getColourForBand (id))
 {
     setSize (20, 20);
     
@@ -45,21 +45,16 @@ BandHandle::~BandHandle()
 void BandHandle::parameterChanged (const String& parameterId, float newValue)
 {
     if (MessageManager::getInstance()->isThisTheMessageThread())
-    {
-        DBG ("Message thread callback");
         update();
-    }
     else
     {
-        DBG ("Audio thread callback");
-        
+
         Component::SafePointer<BandHandle> handle(this);
         MessageManager::callAsync ([handle, this]
                                    {
                                        if (handle != nullptr)
                                            update();
                                    });
-        
     }
 }
 
@@ -71,8 +66,6 @@ void BandHandle::update()
     const auto x = frequencyParam->getNormalisableRange().convertTo0to1 (*frequencyParam) * getParentWidth();
     const auto y = (1.0f - gainParam->getNormalisableRange().convertTo0to1 (*gainParam)) * getParentHeight();
     
-    DBG (*frequencyParam);
-    DBG (String (x) + " ," + String (y));
     setCentrePosition (x, y);
     repaint();
 }
@@ -81,7 +74,7 @@ void BandHandle::update()
 void BandHandle::paint (Graphics& g)
 {
     ColourGradient fillGradient (Colours::black.brighter (0.6f), Point<float> (getLocalBounds().getCentreX(), 0),
-                                 Colours::black.brighter (0.4f), Point<float> (getLocalBounds().getCentreX(), getHeight()),
+                                 colour, Point<float> (getLocalBounds().getCentreX(), getHeight()),
                                  false);
     g.setGradientFill (fillGradient);
     g.fillEllipse (getLocalBounds().toFloat());
@@ -122,7 +115,6 @@ void BandHandle::mouseDrag (const MouseEvent& event)
     const auto proportionalWidth = (mouseDownPosition + event.getOffsetFromDragStart().toFloat()).x / (double) getParentWidth();
     const auto proportionalHeight = (mouseDownPosition + event.getOffsetFromDragStart().toFloat()).y / (double) getParentHeight();
     
-    frequencyParam->setValueNotifyingHost (valueToNormalisedFrequency (proportionalWidth));
-    if (proportionalHeight > 0)
-        gainParam->setValueNotifyingHost (Decibels::gainToDecibels (proportionalHeight));
+    frequencyParam->setValueNotifyingHost (frequencyParam->getNormalisableRange().convertTo0to1 (proportionalWidth));
+    gainParam->setValueNotifyingHost (gainParam->getNormalisableRange().convertTo0to1 (proportionalHeight));
 }

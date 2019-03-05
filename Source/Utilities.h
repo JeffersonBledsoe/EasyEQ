@@ -12,6 +12,26 @@ namespace ParameterNames
     static String enabled {"enabled"};
 }
 
+namespace BandColours
+{
+    static inline Colour getColourForBand (const int bandId)
+    {
+        if (bandId == 0)              return Colour::fromRGB (222, 75, 248);
+        else if (bandId == 1)         return Colour::fromRGB (241, 228, 166);
+        else if (bandId == 2)         return Colour::fromRGB (145, 227, 162);
+        else if (bandId == 3)         return Colour::fromRGB (107, 197, 250);
+        else if (bandId == 4)         return Colour::fromRGB (162, 115, 227);
+        else if (bandId == 5)         return Colour::fromRGB (245, 133, 184);
+        else if (bandId == 6)         return Colour::fromRGB (245, 87, 84);
+        else if (bandId == 7)         return Colour::fromRGB (21, 148, 135);
+        else
+        {
+            jassertfalse;
+            return {};
+        }
+    }
+}
+
 //==============================================================================
 enum FilterShape
 {

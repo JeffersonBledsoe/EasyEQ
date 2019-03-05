@@ -65,19 +65,13 @@ void EasyEqAudioProcessorEditor::parameterChanged (const String& parameterId, fl
     const auto bandId = parameterId.getLastCharacters (1).getIntValue();
     
     if (MessageManager::getInstance()->isThisTheMessageThread())
-    {
-        DBG ("Message thread callback");
         updateHandle (bandId, newValue > 0.5 ? true : false);
-    }
     else
     {
-        DBG ("Audio thread callback");
-        
         MessageManager::callAsync ([this, bandId, newValue]
                                    {
                                        updateHandle (bandId, newValue > 0.5 ? true : false);
                                    });
-        
     }
 }
 

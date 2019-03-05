@@ -22,6 +22,7 @@ private:
     //==============================================================================
     const int bandId;
     AudioProcessorValueTreeState& state;
+    Colour colour;
     
     //==========================================================================
     Point<float> mouseDownPosition, newPosition;
