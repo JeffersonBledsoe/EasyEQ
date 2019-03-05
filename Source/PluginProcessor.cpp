@@ -267,8 +267,8 @@ void EasyEqAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock
     
     dsp::ProcessSpec spec { sampleRate,
                             static_cast<uint32> (samplesPerBlock),
-                            static_cast<uint32> (jmin (getTotalNumInputChannels(),
-                                                       getTotalNumOutputChannels()))
+                            static_cast<uint32> (jmin (getMainBusNumInputChannels(),
+                                                       getMainBusNumOutputChannels()))
                           };
     equaliser.prepare (spec);
 }
@@ -290,17 +290,22 @@ void EasyEqAudioProcessor::releaseResources()
 
 bool EasyEqAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
-    // This is the place where you check if the layout is supported.
-    // In this template code we only support mono or stereo.
-    if (layouts.getMainOutputChannelSet() != AudioChannelSet::mono()
-     && layouts.getMainOutputChannelSet() != AudioChannelSet::stereo())
-        return false;
-
-    // This checks if the input layout matches the output layout
-    if (layouts.getMainOutputChannelSet() != layouts.getMainInputChannelSet())
-        return false;
-
-    return true;
+    if (layouts.getMainOutputChannelSet() == AudioChannelSet::mono())
+    {
+        if (layouts.getMainInputChannelSet() == AudioChannelSet::mono())
+            return true;
+    }
+    else if (layouts.getMainOutputChannelSet() == AudioChannelSet::stereo())
+    {
+        // Uncomment to enable mono->stereo support in the bus layouts
+//        if (layouts.getMainInputChannelSet() == AudioChannelSet::mono())
+//            return true;
+        
+        if (layouts.getMainInputChannelSet() == AudioChannelSet::stereo())
+            return true;
+    }
+    
+    return false;
 }
 
 //==============================================================================
