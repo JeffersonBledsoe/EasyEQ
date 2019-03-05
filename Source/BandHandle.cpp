@@ -115,6 +115,6 @@ void BandHandle::mouseDrag (const MouseEvent& event)
     const auto proportionalWidth = (mouseDownPosition + event.getOffsetFromDragStart().toFloat()).x / (double) getParentWidth();
     const auto proportionalHeight = (mouseDownPosition + event.getOffsetFromDragStart().toFloat()).y / (double) getParentHeight();
     
-    frequencyParam->setValueNotifyingHost (frequencyParam->getNormalisableRange().convertTo0to1 (proportionalWidth));
-    gainParam->setValueNotifyingHost (gainParam->getNormalisableRange().convertTo0to1 (proportionalHeight));
+    frequencyParam->setValueNotifyingHost (proportionalWidth);
+    gainParam->setValueNotifyingHost (1.0f - proportionalHeight);
 }
