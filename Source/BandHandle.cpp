@@ -44,17 +44,34 @@ BandHandle::~BandHandle()
 //==============================================================================
 void BandHandle::parameterChanged (const String& parameterId, float newValue)
 {
-    if (parameterId.containsIgnoreCase (ParameterNames::frequency) || parameterId.containsIgnoreCase (ParameterNames::gain))
+    if (MessageManager::getInstance()->isThisTheMessageThread())
     {
-        MessageManager::callAsync ([this]
-        {
-            const auto x = frequencyParam->getNormalisableRange().convertTo0to1 (*frequencyParam) * getParentWidth();
-            const auto y = gainParam->getNormalisableRange().convertTo0to1 (jlimit (0.1f, 2.0f, 2.0f - *gainParam)) * getParentHeight();
-            
-            setCentrePosition (x, y);
-        });
+        DBG ("Message thread callback");
+        update();
     }
+    else
+    {
+        DBG ("Audio thread callback");
+        
+        Component::SafePointer<BandHandle> handle(this);
+        MessageManager::callAsync ([handle, this]
+                                   {
+                                       if (handle != nullptr)
+                                           update();
+                                   });
+        
+    }
+}
+
+void BandHandle::update()
+{
+    if (thisComponent != this || thisComponent == nullptr)
+        return;
     
+    const auto x = frequencyParam->getNormalisableRange().convertTo0to1 (*frequencyParam) * getParentWidth();
+    const auto y = gainParam->getNormalisableRange().convertTo0to1 (jlimit (0.1f, 2.0f, 2.0f - *gainParam)) * getParentHeight();
+    
+    setCentrePosition (x, y);
     repaint();
 }
 

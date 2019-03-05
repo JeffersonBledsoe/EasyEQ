@@ -31,6 +31,7 @@ private:
     //==========================================================================
     OwnedArray<BandHandle> handles;
     BandHandle* selectedHandle = nullptr;
+    void updateHandle (int bandId, bool shouldAdd);
     
     //==========================================================================
     Path frequencyResponsePlotPath, frequencyResponseHitPath;

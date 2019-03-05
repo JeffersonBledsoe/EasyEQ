@@ -38,6 +38,7 @@ ControlPanel::ControlPanel (AudioProcessorValueTreeState& s)
 //==============================================================================
 void ControlPanel::setSelectedBand (int bandId)
 {
+    state.removeParameterListener ("shape_band" + std::to_string (currentBandId), this);
     frequencyAttachment.reset();
     gainAttachment.reset();
     qAttachment.reset();
@@ -49,7 +50,7 @@ void ControlPanel::setSelectedBand (int bandId)
     const auto bandNumber = std::to_string (bandId);
     bandName.setText ("Band " + bandNumber, dontSendNotification);
     
-    auto shapeParam = static_cast<AudioParameterChoice*> (state.getParameter (ParameterNames::shape + "_band" + bandNumber));
+    shapeParam = dynamic_cast<AudioParameterChoice*> (state.getParameter (ParameterNames::shape + "_band" + bandNumber));
     state.addParameterListener ("shape_band" + std::to_string (bandId), this);
     shapeSelector.addItemList (shapeParam->choices, 1);
     
@@ -77,14 +78,19 @@ ControlPanel::~ControlPanel()
 //==============================================================================
 void ControlPanel::parameterChanged (const String& parameterId, float newValue)
 {
-    if (parameterId.containsIgnoreCase (ParameterNames::shape))
-    {
-        if (newValue == FilterShape::Bell)              gainSlider.setEnabled (true);
-        else if (newValue == FilterShape::LowShelf)     gainSlider.setEnabled (true);
-        else if (newValue == FilterShape::HighShelf)    gainSlider.setEnabled (true);
-        else
-            gainSlider.setEnabled (false);
-    }
+    if (MessageManager::getInstance()->isThisTheMessageThread())
+        update();
+    else
+        MessageManager::callAsync ([this] { update(); });
+}
+
+void ControlPanel::update()
+{
+    if (*shapeParam == FilterShape::Bell)              gainSlider.setEnabled (true);
+    else if (*shapeParam == FilterShape::LowShelf)     gainSlider.setEnabled (true);
+    else if (*shapeParam == FilterShape::HighShelf)    gainSlider.setEnabled (true);
+    else
+        gainSlider.setEnabled (false);
 }
 
 //==============================================================================

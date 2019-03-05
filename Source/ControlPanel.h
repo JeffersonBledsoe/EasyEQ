@@ -25,20 +25,19 @@ private:
     int currentBandId {-1};
     
     //==========================================================================
-    Label bandName;
+    AudioParameterChoice* shapeParam;
+    void update();
     
+    //==========================================================================
+    Label bandName;
     Slider frequencySlider { Slider::RotaryVerticalDrag, Slider::NoTextBox };
     std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> frequencyAttachment;
-    
     Slider gainSlider { Slider::RotaryVerticalDrag, Slider::NoTextBox };
     std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> gainAttachment;
-    
     Slider qSlider { Slider::RotaryVerticalDrag, Slider::NoTextBox };
     std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> qAttachment;
-    
     ToggleButton bypassButton;
     std::unique_ptr<AudioProcessorValueTreeState::ButtonAttachment> bypassAttachment;
-    
     ComboBox shapeSelector;
     std::unique_ptr<AudioProcessorValueTreeState::ComboBoxAttachment> shapeAttachment;
     

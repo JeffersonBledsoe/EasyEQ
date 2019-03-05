@@ -34,6 +34,7 @@ EasyEqAudioProcessorEditor::EasyEqAudioProcessorEditor (EasyEqAudioProcessor& p,
 
 EasyEqAudioProcessorEditor::~EasyEqAudioProcessorEditor()
 {
+    processor.removeChangeListener (this);
     for (auto i {0}; i < 8; ++i)
         state.removeParameterListener (ParameterNames::enabled + "_band" + std::to_string (i), this);
     
@@ -63,7 +64,26 @@ void EasyEqAudioProcessorEditor::parameterChanged (const String& parameterId, fl
 {
     const auto bandId = parameterId.getLastCharacters (1).getIntValue();
     
-    if (newValue == true)
+    if (MessageManager::getInstance()->isThisTheMessageThread())
+    {
+        DBG ("Message thread callback");
+        updateHandle (bandId, newValue > 0.5 ? true : false);
+    }
+    else
+    {
+        DBG ("Audio thread callback");
+        
+        MessageManager::callAsync ([this, bandId, newValue]
+                                   {
+                                       updateHandle (bandId, newValue > 0.5 ? true : false);
+                                   });
+        
+    }
+}
+
+void EasyEqAudioProcessorEditor::updateHandle (int bandId, bool shouldAdd)
+{
+    if (shouldAdd == true)
     {
         auto* handle = handles.add (new BandHandle (bandId, state));
         addAndMakeVisible (handle);
@@ -167,7 +187,7 @@ void EasyEqAudioProcessorEditor::updatePlot (const std::vector<double>& frequenc
     for (auto frequency {1}; frequency < frequencies.size(); ++frequency)
     {
         frequencyResponsePlotPath.lineTo (getX() + frequency * xFactor,
-                         getLocalBounds().getCentreY() - yFactor * std::log (magnitudes[frequency]) / std::log (2));
+                                          getLocalBounds().getCentreY() - yFactor * std::log (magnitudes[frequency]) / std::log (2));
     }
     
     PathStrokeType frequencyResponseHitPathStroke (6.0f);
