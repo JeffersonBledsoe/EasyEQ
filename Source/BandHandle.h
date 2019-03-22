@@ -4,7 +4,8 @@
 
 //==============================================================================
 class BandHandle : public Component,
-                   public AudioProcessorValueTreeState::Listener
+                   public AudioProcessorValueTreeState::Listener,
+                   public Timer
 {
 public:
     //==========================================================================
@@ -39,8 +40,9 @@ private:
     AudioParameterBool* enabledParam;
     
     //==========================================================================
+    std::atomic<bool> needsUpdate { false };
     void update();
-    SafePointer<BandHandle> thisComponent = this;
+    void timerCallback() override;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BandHandle)
 };

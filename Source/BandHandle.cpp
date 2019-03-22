@@ -29,10 +29,13 @@ BandHandle::BandHandle (const int id, AudioProcessorValueTreeState& s)
     setName ("Band " + bandNumber);
     
     resized();
+    startTimerHz (30);
 }
 
 BandHandle::~BandHandle()
 {
+    stopTimer();
+    
     const auto bandNumber = std::to_string (bandId);
     state.removeParameterListener ("frequency_band" + bandNumber, this);
     state.removeParameterListener ("gain_band" + bandNumber, this);
@@ -47,27 +50,24 @@ void BandHandle::parameterChanged (const String& parameterId, float newValue)
     if (MessageManager::getInstance()->isThisTheMessageThread())
         update();
     else
-    {
+        needsUpdate.store (true);
+}
 
-        Component::SafePointer<BandHandle> handle(this);
-        MessageManager::callAsync ([handle, this]
-                                   {
-                                       if (handle != nullptr)
-                                           update();
-                                   });
-    }
+void BandHandle::timerCallback()
+{
+    if (needsUpdate.load() == true)
+        update();
 }
 
 void BandHandle::update()
 {
-    if (thisComponent != this || thisComponent == nullptr)
-        return;
-
-    const auto x = frequencyParam->getNormalisableRange().convertTo0to1 (*frequencyParam) * getParentWidth();
+    jassert (MessageManager::getInstance()->isThisTheMessageThread());
+    
+    const auto x = valueToNormalisedFrequency (*frequencyParam) * getParentWidth();
     const auto y = (1.0f - gainParam->getNormalisableRange().convertTo0to1 (*gainParam)) * getParentHeight();
     
     setCentrePosition (x, y);
-    repaint();
+    needsUpdate.store (false);
 }
 
 //==============================================================================
