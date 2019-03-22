@@ -25,7 +25,7 @@ private:
     Colour colour;
     
     //==========================================================================
-    Point<float> mouseDownPosition, newPosition;
+    Point<float> mouseDownPosition;
     void mouseDoubleClick (const MouseEvent& event) override;
     void mouseDown (const MouseEvent& event) override;
     void mouseDrag (const MouseEvent& event) override;

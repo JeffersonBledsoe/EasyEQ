@@ -61,15 +61,9 @@ public:
         Band (const int bandIdToUse,
               float frequencyToUse, float qToUse, FilterShape shapeToUse,
               float gainToUse = 0.0f, bool shouldBypass = false, bool enabled = false)
-        : bandId (bandIdToUse),
-          frequency (frequencyToUse), q (qToUse), shape (shapeToUse),
-          gain (gainToUse), bypassed (shouldBypass), isEnabled (enabled)
+        : bandId (bandIdToUse), bypassed (shouldBypass), isEnabled (enabled)
         {}
         const int bandId;
-        float frequency;
-        float q;
-        FilterShape shape;
-        float gain;
         bool bypassed;
         bool isEnabled;
         std::vector<double> magnitudes;

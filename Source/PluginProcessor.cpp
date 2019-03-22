@@ -10,7 +10,7 @@ inline String gainToFloat (float value)
     return val.upToFirstOccurrenceOf (".", true, true) + val.fromFirstOccurrenceOf (".", false, true).substring (0, 2);
 }
 
-String getFilterShapeNameForId (int id)
+auto getFilterShapeNameForId (int id)
 {
     switch (id)
     {
@@ -24,7 +24,7 @@ String getFilterShapeNameForId (int id)
         default: break;
     }
     
-    return {};
+    return "";
 }
 
 StringArray getFilterShapeNames()

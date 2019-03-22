@@ -49,10 +49,10 @@ enum FilterShape
 //==============================================================================
 inline float valueToNormalisedFrequency (float value, float min = 20.0f, float max = 20000.0f)
 {
-    return std::log (value / min) / std::log (max / min);
+    return std::logf (value / min) / std::logf (max / min);
 }
 
 inline float normalisedValueToFrequency (float normalisedValue, float min = 20.0f, float max = 20000.0f)
 {
-    return std::exp (normalisedValue * (std::log (max / min) + std::log (min)));
+    return min * std::expf (normalisedValue * std::logf (max / min));
 }
