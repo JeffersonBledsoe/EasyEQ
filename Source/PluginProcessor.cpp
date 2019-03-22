@@ -46,7 +46,17 @@ AudioProcessorValueTreeState::ParameterLayout createParameters()
     {
         const auto bandId = std::to_string (i);
         auto frequency = std::make_unique<AudioParameterFloat> (ParameterNames::frequency + "_band" + bandId, "Band " + bandId + " Frequency",
-                                                                NormalisableRange<float> (20.0f, 20000.0f), 1000.0f,
+                                                                NormalisableRange<float> (20.0f,
+                                                                                          20000.0f,
+                                                                                          [] (float min, float max, float normalisedValue)
+                                                                                          {
+                                                                                              return normalisedValueToFrequency (normalisedValue, min, max);
+                                                                                          },
+                                                                                          [] (float min, float max, float value)
+                                                                                          {
+                                                                                              return valueToNormalisedFrequency (value, min, max);
+                                                                                          }),
+                                                                1000.0f,
                                                                 "Hz", AudioProcessorParameter::genericParameter,
                                                                 [] (float value, int) { return String (normalisedValueToFrequency (value), 0)
                                                                                                       .substring (0, 6).trimCharactersAtEnd ("."); },
@@ -139,6 +149,9 @@ const String EasyEqAudioProcessor::getName() const
 //==============================================================================
 void EasyEqAudioProcessor::parameterChanged (const String& parameterId, float newValue)
 {
+    if (currentSampleRate < 1)
+        return;
+    
     const auto bandId = parameterId.getLastCharacters (1).getIntValue();
     
     if (parameterId.containsIgnoreCase (ParameterNames::bypass))
@@ -156,25 +169,25 @@ void EasyEqAudioProcessor::parameterChanged (const String& parameterId, float ne
         
         updateFrequencyResponse();
     }
+    else if (parameterId.containsIgnoreCase (ParameterNames::enabled))
+    {
+        bands[bandId].isEnabled = newValue > 0.5f ? true : false;
+        
+        equaliser.setBypassed<0> (*state.getRawParameterValue (ParameterNames::bypass + "_band" + std::to_string (0)));
+        equaliser.setBypassed<1> (*state.getRawParameterValue (ParameterNames::bypass + "_band" + std::to_string (1)));
+        equaliser.setBypassed<2> (*state.getRawParameterValue (ParameterNames::bypass + "_band" + std::to_string (2)));
+        equaliser.setBypassed<3> (*state.getRawParameterValue (ParameterNames::bypass + "_band" + std::to_string (3)));
+        equaliser.setBypassed<4> (*state.getRawParameterValue (ParameterNames::bypass + "_band" + std::to_string (4)));
+        equaliser.setBypassed<5> (*state.getRawParameterValue (ParameterNames::bypass + "_band" + std::to_string (5)));
+        equaliser.setBypassed<6> (*state.getRawParameterValue (ParameterNames::bypass + "_band" + std::to_string (6)));
+        equaliser.setBypassed<7> (*state.getRawParameterValue (ParameterNames::bypass + "_band" + std::to_string (7)));
+        
+        updateFrequencyResponse();
+    }
     else
     {
         if (! isPositiveAndBelow (bandId, bands.size()))
             return;
-        
-        auto& band = bands[bandId];
-        
-        if (parameterId.containsIgnoreCase (ParameterNames::shape))
-            band.shape = static_cast<FilterShape> (static_cast<int> (newValue));
-        else if (parameterId.containsIgnoreCase (ParameterNames::frequency))
-            band.frequency = newValue;
-        else if (parameterId.containsIgnoreCase (ParameterNames::q))
-            band.q = newValue;
-        else if (parameterId.containsIgnoreCase (ParameterNames::gain))
-            band.gain = newValue;
-        else if (parameterId.containsIgnoreCase (ParameterNames::bypass))
-            band.bypassed = newValue >= 0.5f;
-        else if (parameterId.containsIgnoreCase (ParameterNames::enabled))
-            band.isEnabled = newValue >= 0.5f;
         
         updateBand (bandId);
     }
@@ -250,8 +263,10 @@ void EasyEqAudioProcessor::updateFrequencyResponse()
     std::fill (totalMagnitudes.begin(), totalMagnitudes.end(), 1.0f);
     
     for (auto i {0}; i < bands.size(); ++i)
+    {
         if (bands[i].isEnabled && ! bands[i].bypassed)
             FloatVectorOperations::multiply (totalMagnitudes.data(), bands[i].magnitudes.data(), static_cast<int> (totalMagnitudes.size()));
+    }
     
     if (getActiveEditor() != nullptr)
         sendChangeMessage();
@@ -328,9 +343,9 @@ void EasyEqAudioProcessor::getStateInformation (MemoryBlock& destData)
 
 void EasyEqAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    if (auto xml = std::unique_ptr<XmlElement> (getXmlFromBinary (data, sizeInBytes)))
-        if (xml->hasTagName (state.state.getType()))
-            state.replaceState (ValueTree::fromXml (*xml));
+//    if (auto xml = std::unique_ptr<XmlElement> (getXmlFromBinary (data, sizeInBytes)))
+//        if (xml->hasTagName (state.state.getType()))
+//            state.replaceState (ValueTree::fromXml (*xml));
 }
 
 bool EasyEqAudioProcessor::acceptsMidi() const
