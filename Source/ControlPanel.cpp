@@ -1,16 +1,37 @@
 #include "JuceHeader.h"
 #include "ControlPanel.h"
 #include "Utilities.h"
+#include <numeric>
 
 //==============================================================================
 using SliderAttachment = AudioProcessorValueTreeState::SliderAttachment;
 using ButtonAttachment = AudioProcessorValueTreeState::ButtonAttachment;
 using ComboBoxAttachment = AudioProcessorValueTreeState::ComboBoxAttachment;
 
+std::array<ControlPanelBand, 8> createBandControls()
+{
+   std::array<ControlPanelBand, 8> bands
+    {
+        ControlPanelBand { 0 },
+        ControlPanelBand { 1 },
+        ControlPanelBand { 2 },
+        ControlPanelBand { 3 },
+        ControlPanelBand { 4 },
+        ControlPanelBand { 5 },
+        ControlPanelBand { 6 },
+        ControlPanelBand { 7 }
+    };
+    
+    return bands;
+}
+
 //==============================================================================
 ControlPanel::ControlPanel (AudioProcessorValueTreeState& s)
-: state (s)
+: state (s), bands (createBandControls())
 {
+    for (auto& bandControl : bands)
+        addAndMakeVisible (bandControl);
+    
     bandName.setText ("Select a band", dontSendNotification);
     bandName.setJustificationType (Justification::centred);
     
@@ -105,20 +126,15 @@ void ControlPanel::paint (Graphics& g)
 
 void ControlPanel::resized()
 {
-    auto bounds = getLocalBounds().reduced (3, proportionOfHeight (0.07f));
+    Grid grid;
+    using Track = Grid::TrackInfo;
+    grid.templateRows    = { Track (1_fr) };
+    grid.autoColumns = Track (1_fr);
     
-    FlexBox flex;
-    flex.flexDirection = FlexBox::Direction::row;
-    flex.items.add (FlexItem (bandName).withFlex (1));
-    flex.items.add (FlexItem (frequencySlider).withFlex (2));
-    flex.items.add (FlexItem (gainSlider).withFlex (3));
-    flex.items.add (FlexItem (qSlider).withFlex (2));
+    grid.autoFlow = Grid::AutoFlow::column;
     
-    FlexBox endColumn;
-    endColumn.flexDirection = FlexBox::Direction::column;
-    endColumn.items.add (FlexItem (bypassButton).withFlex (2));
-    endColumn.items.add (FlexItem (shapeSelector).withFlex (3));
+    for (auto& bandControl: bands)
+        grid.items.add (bandControl);
     
-    flex.items.add (FlexItem (endColumn).withFlex (2));
-    flex.performLayout (bounds);
+    grid.performLayout (getLocalBounds());
 }

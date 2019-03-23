@@ -58,9 +58,7 @@ public:
     //==============================================================================
     struct Band
     {
-        Band (const int bandIdToUse,
-              float frequencyToUse, float qToUse, FilterShape shapeToUse,
-              float gainToUse = 0.0f, bool shouldBypass = false, bool enabled = false)
+        Band (const int bandIdToUse, bool shouldBypass = false, bool enabled = false)
         : bandId (bandIdToUse), bypassed (shouldBypass), isEnabled (enabled)
         {}
         const int bandId;

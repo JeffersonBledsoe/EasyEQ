@@ -1,6 +1,7 @@
 #pragma once
 
 #include "JuceHeader.h"
+#include "ControlPanelBand.h"
 
 //==============================================================================
 class ControlPanel : public Component,
@@ -22,6 +23,7 @@ public:
 private:
     //==========================================================================
     AudioProcessorValueTreeState& state;
+    std::array<ControlPanelBand, 8> bands;
     int currentBandId {-1};
     
     //==========================================================================

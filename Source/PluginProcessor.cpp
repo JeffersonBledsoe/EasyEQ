@@ -97,14 +97,14 @@ std::array<EasyEqAudioProcessor::Band, 8> createBandDefaults()
 {
     std::array<EasyEqAudioProcessor::Band, 8> defaults
     {
-        EasyEqAudioProcessor::Band (0, 1000.0f, 0.707f, FilterShape::Bell),
-        EasyEqAudioProcessor::Band (1, 1000.0f, 0.707f, FilterShape::Bell),
-        EasyEqAudioProcessor::Band (2, 1000.0f, 0.707f, FilterShape::Bell),
-        EasyEqAudioProcessor::Band (3, 1000.0f, 0.707f, FilterShape::Bell),
-        EasyEqAudioProcessor::Band (4, 1000.0f, 0.707f, FilterShape::Bell),
-        EasyEqAudioProcessor::Band (5, 1000.0f, 0.707f, FilterShape::Bell),
-        EasyEqAudioProcessor::Band (6, 1000.0f, 0.707f, FilterShape::Bell),
-        EasyEqAudioProcessor::Band (7, 1000.0f, 0.707f, FilterShape::Bell)
+        EasyEqAudioProcessor::Band (0),
+        EasyEqAudioProcessor::Band (1),
+        EasyEqAudioProcessor::Band (2),
+        EasyEqAudioProcessor::Band (3),
+        EasyEqAudioProcessor::Band (4),
+        EasyEqAudioProcessor::Band (5),
+        EasyEqAudioProcessor::Band (6),
+        EasyEqAudioProcessor::Band (7)
     };
     
     return defaults;

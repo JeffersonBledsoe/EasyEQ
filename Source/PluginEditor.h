@@ -3,12 +3,11 @@
 #include "JuceHeader.h"
 #include "PluginProcessor.h"
 #include "ControlPanel.h"
-#include "BandHandle.h"
 #include "EasyEqLookAndFeel.h"
+#include "HandleEditor.h"
 
 //==============================================================================
 class EasyEqAudioProcessorEditor : public AudioProcessorEditor,
-                                   public AudioProcessorValueTreeState::Listener,
                                    public ChangeListener
 {
 public:
@@ -18,9 +17,7 @@ public:
 
     //==========================================================================
     void paint (Graphics& g) override;
-    
-    //==========================================================================
-    void parameterChanged (const String& parameterId, float newValue) override;
+    void resized() override;
 
 private:
     //==========================================================================
@@ -29,24 +26,15 @@ private:
     EasyEqLookAndFeel laf;
     
     //==========================================================================
-    OwnedArray<BandHandle> handles;
-    BandHandle* selectedHandle = nullptr;
-    void updateHandle (int bandId, bool shouldAdd);
+    HandleEditor handleEditor;
+    ControlPanel controlPanel;
     
     //==========================================================================
     Path frequencyResponsePlotPath, frequencyResponseHitPath;
     void updatePlot (const std::vector<double>& frequencies, const std::vector<double>& magnitudes);
-    Point<float> mouseDownPosition;
-    
-    //==========================================================================
-    ControlPanel controlPanel;
-    void updateControlPanelPosition (const Point<float> position);
     
     //==========================================================================
     void changeListenerCallback (ChangeBroadcaster* broadcaster) override;
-    void mouseDown (const MouseEvent& event) override;
-    void mouseDoubleClick (const MouseEvent& event) override;
-    void mouseDrag (const MouseEvent& event) override;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EasyEqAudioProcessorEditor)
 };

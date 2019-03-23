@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="nkNVLf" name="EasyEQ" projectType="audioplug" jucerVersion="5.4.2"
+<JUCERPROJECT id="nkNVLf" name="EasyEQ" projectType="audioplug" jucerVersion="5.4.3"
               companyName="Jefferson Bledsoe" companyWebsite="jeffersonbledsoe.com"
               companyEmail="me@jeffersonbledsoe.com" pluginAAXCategory="1"
               pluginVST3Category="EQ" pluginRTASCategory="1" pluginFormats="buildAU,buildStandalone,buildVST3">
@@ -15,6 +15,13 @@
       <FILE id="YG6AIC" name="ControlPanel.cpp" compile="1" resource="0"
             file="Source/ControlPanel.cpp"/>
       <FILE id="d0dfmd" name="ControlPanel.h" compile="0" resource="0" file="Source/ControlPanel.h"/>
+      <FILE id="YOMMYr" name="ControlPanelBand.cpp" compile="1" resource="0"
+            file="Source/ControlPanelBand.cpp"/>
+      <FILE id="s58jPw" name="ControlPanelBand.h" compile="0" resource="0"
+            file="Source/ControlPanelBand.h"/>
+      <FILE id="mGC7LF" name="HandleEditor.cpp" compile="1" resource="0"
+            file="Source/HandleEditor.cpp"/>
+      <FILE id="ZiKXot" name="HandleEditor.h" compile="0" resource="0" file="Source/HandleEditor.h"/>
       <FILE id="mFrKK1" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="IEq5Ag" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
