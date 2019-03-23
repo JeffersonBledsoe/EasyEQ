@@ -49,6 +49,9 @@ void EasyEqAudioProcessorEditor::paint (Graphics& g)
     
     g.setColour (Colour::fromRGB (235, 235, 235));
     g.fillPath (frequencyResponsePlotPath);
+    
+    g.setOpacity (0.4f);
+    g.drawHorizontalLine (getLocalBounds().getCentreY(), getX(), getRight());
 }
 
 //==============================================================================
