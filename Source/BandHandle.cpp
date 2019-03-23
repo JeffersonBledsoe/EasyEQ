@@ -28,7 +28,6 @@ BandHandle::BandHandle (const int id, AudioProcessorValueTreeState& s)
     
     setSize (20, 20);
     
-//    resized();
     startTimerHz (30);
 }
 
