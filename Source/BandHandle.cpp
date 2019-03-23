@@ -11,9 +11,9 @@ using ComboBoxAttachment = AudioProcessorValueTreeState::ComboBoxAttachment;
 BandHandle::BandHandle (const int id, AudioProcessorValueTreeState& s)
 : bandId (id), state (s), colour (BandColours::getColourForBand (id))
 {
-    setSize (20, 20);
-    
     const auto bandNumber = std::to_string (bandId);
+    setName ("Band_Handle_" + String (bandId));
+    
     frequencyParam = static_cast<AudioParameterFloat*> (state.getParameter (ParameterNames::frequency + "_band" + bandNumber));
     gainParam = static_cast<AudioParameterFloat*> (state.getParameter (ParameterNames::gain + "_band" + bandNumber));
     qParam = static_cast<AudioParameterFloat*> (state.getParameter (ParameterNames::q + "_band" + bandNumber));
@@ -26,9 +26,9 @@ BandHandle::BandHandle (const int id, AudioProcessorValueTreeState& s)
     state.addParameterListener ("shape_band" + bandNumber, this);
     state.addParameterListener ("bypass_band" + bandNumber, this);
     
-    setName ("Band " + bandNumber);
+    setSize (20, 20);
     
-    resized();
+//    resized();
     startTimerHz (30);
 }
 

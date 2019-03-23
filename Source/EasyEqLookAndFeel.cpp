@@ -9,6 +9,18 @@ EasyEqLookAndFeel::EasyEqLookAndFeel()
 }
 
 //==============================================================================
+void EasyEqLookAndFeel::drawLinearSlider (Graphics& g, int x, int y, int width, int height,
+                                       float sliderPos,
+                                       float minSliderPos,
+                                       float maxSliderPos,
+                                       const Slider::SliderStyle style, Slider& slider)
+{
+    const auto bounds = Rectangle<int> { x, y, width, height };
+    
+    g.setColour (Colours::white);
+    g.drawText (String (slider.getValue()), bounds, Justification::centred);
+}
+
 void EasyEqLookAndFeel::drawRotarySlider (Graphics& g, int x, int y, int width, int height, float sliderPos,
                                           const float rotaryStartAngle, const float rotaryEndAngle, Slider& slider)
 {

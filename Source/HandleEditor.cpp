@@ -34,11 +34,6 @@ void HandleEditor::paint (Graphics& g)
 {
 //    g.setColour (getLookAndFeel().findColour (ResizableWindow::backgroundColourId) );
 //    g.fillRect (getLocalBounds());
-    
-    g.setColour (Colours::white);
-    g.setFont (14.0f);
-    g.drawText ("HandleEditor", getLocalBounds(),
-                Justification::centred, true);   // draw some placeholder text
 }
 
 //==============================================================================
@@ -60,11 +55,7 @@ void HandleEditor::parameterChanged (const String& parameterId, float newValue)
 void HandleEditor::updateHandle (int bandId, bool shouldAdd)
 {
     if (shouldAdd == true)
-    {
-        auto* handle = handles.add (new BandHandle (bandId, state));
-        addAndMakeVisible (handle);
-        handle->addMouseListener (this, true);
-    }
+        addAndMakeVisible (handles.add (new BandHandle (bandId, state)));
     else
     {
         handles.remove (bandId);
@@ -76,13 +67,6 @@ void HandleEditor::updateHandle (int bandId, bool shouldAdd)
 void HandleEditor::mouseDown (const MouseEvent& event)
 {
     mouseDownPosition = event.getEventRelativeTo (this).position;
-    
-//    if (auto* handle = dynamic_cast<BandHandle*> (event.originalComponent))
-//    {
-//        selectedHandle = handle;
-//        controlPanel.setSelectedBand (selectedHandle->getBandId());
-//        updateControlPanelPosition (handle->getBoundsInParent().getCentre().toFloat());
-//    }
 }
 
 void HandleEditor::mouseDoubleClick (const MouseEvent& event)
