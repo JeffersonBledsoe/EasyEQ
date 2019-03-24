@@ -33,7 +33,6 @@ namespace BandColours
 }
 
 //==============================================================================
-
 namespace FilterShapes
 {
     enum Shape

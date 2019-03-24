@@ -2,6 +2,30 @@
 #include "ControlPanelBand.h"
 #include "Utilities.h"
 
+std::unique_ptr<Drawable> getIconForId (const int id)
+{
+    switch (id)
+    {
+        case FilterShapes::Bell:            return std::unique_ptr<Drawable> (Drawable::createFromImageData (BinaryData::Bell_svg,
+                                                                                                             BinaryData::Bell_svgSize));
+        case FilterShapes::LowCut:          return std::unique_ptr<Drawable> (Drawable::createFromImageData (BinaryData::LowCut_svg,
+                                                                                                             BinaryData::LowCut_svgSize));
+        case FilterShapes::LowShelf:        return std::unique_ptr<Drawable> (Drawable::createFromImageData (BinaryData::LowShelf_svg,
+                                                                                                             BinaryData::LowShelf_svgSize));
+        case FilterShapes::HighShelf:       return std::unique_ptr<Drawable> (Drawable::createFromImageData (BinaryData::HighShelf_svg,
+                                                                                                             BinaryData::HighShelf_svgSize));
+        case FilterShapes::HighCut:         return std::unique_ptr<Drawable> (Drawable::createFromImageData (BinaryData::HighCut_svg,
+                                                                                                             BinaryData::HighCut_svgSize));
+        case FilterShapes::Notch:           return std::unique_ptr<Drawable> (Drawable::createFromImageData (BinaryData::Notch_svg,
+                                                                                                             BinaryData::Notch_svgSize));
+        case FilterShapes::BandPass:        return std::unique_ptr<Drawable> (Drawable::createFromImageData (BinaryData::BandPass_svg,
+                                                                                                             BinaryData::BandPass_svgSize));
+        default: break;
+    }
+    
+    return nullptr;
+}
+
 //==============================================================================
 using SliderAttachment = AudioProcessorValueTreeState::SliderAttachment;
 using ButtonAttachment = AudioProcessorValueTreeState::ButtonAttachment;
@@ -10,11 +34,15 @@ using ComboBoxAttachment = AudioProcessorValueTreeState::ComboBoxAttachment;
 class ShapeSelectPopupItem : public PopupMenu::CustomComponent
 {
 public:
-    ShapeSelectPopupItem (StringRef itemLabel)
-    : itemText (itemLabel)
+    ShapeSelectPopupItem (const int itemId, const int bandId)
+    : itemText (FilterShapes::getFilterShapeNameForId (itemId)),
+      icon (getIconForId (itemId))
     {
         shapeLabel.setText (itemText, dontSendNotification);
+        icon->replaceColour (Colours::black, BandColours::getColourForBand (bandId));
+        
         addAndMakeVisible (shapeLabel);
+        addAndMakeVisible (icon.get());
     }
     
     void getIdealSize (int& idealWidth, int& idealHeight) override
@@ -26,14 +54,17 @@ public:
     
     void resized() override
     {
-        auto bounds = getLocalBounds();
+        auto bounds = getLocalBounds().toFloat();
         
-        shapeLabel.setBounds (bounds);
+        icon->setTransformToFit (bounds.removeFromLeft (proportionOfWidth (0.2f)).reduced (3), RectanglePlacement::stretchToFit);
+        
+        shapeLabel.setBounds (bounds.toNearestInt());
     }
     
 private:
-    Label shapeLabel;
     StringRef itemText;
+    Label shapeLabel;
+    std::unique_ptr<Drawable> icon;
 };
 
 //==============================================================================
@@ -62,7 +93,7 @@ ControlPanelBand::ControlPanelBand (const int id, AudioProcessorValueTreeState& 
         PopupMenu::Item item;
         item.text = shapeParam->choices[i];
         item.itemID = i + 1;
-        item.customComponent = new ShapeSelectPopupItem (shapeParam->choices[i]);;
+        item.customComponent = new ShapeSelectPopupItem (i, bandId);
         shapeSelector.getRootMenu()->addItem (item);
     }
     

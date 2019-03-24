@@ -5,6 +5,15 @@
               companyEmail="me@jeffersonbledsoe.com" pluginAAXCategory="1"
               pluginVST3Category="EQ" pluginRTASCategory="1" pluginFormats="buildAU,buildStandalone,buildVST3">
   <MAINGROUP id="XZuJSb" name="EasyEQ">
+    <GROUP id="{AC6694C7-179A-2294-9156-6D0FC606603D}" name="Assets">
+      <FILE id="OLhTf4" name="BandPass.svg" compile="0" resource="1" file="Assets/ShapeIcons/BandPass.svg"/>
+      <FILE id="sQhUvK" name="Bell.svg" compile="0" resource="1" file="Assets/ShapeIcons/Bell.svg"/>
+      <FILE id="QVnGZj" name="HighCut.svg" compile="0" resource="1" file="Assets/ShapeIcons/HighCut.svg"/>
+      <FILE id="HRIRQ0" name="HighShelf.svg" compile="0" resource="1" file="Assets/ShapeIcons/HighShelf.svg"/>
+      <FILE id="jRhg1l" name="LowCut.svg" compile="0" resource="1" file="Assets/ShapeIcons/LowCut.svg"/>
+      <FILE id="NAuL39" name="LowShelf.svg" compile="0" resource="1" file="Assets/ShapeIcons/LowShelf.svg"/>
+      <FILE id="d62EAY" name="Notch.svg" compile="0" resource="1" file="Assets/ShapeIcons/Notch.svg"/>
+    </GROUP>
     <GROUP id="{235C9E8B-B981-66CA-E662-06B71A924845}" name="Source">
       <FILE id="t81UFr" name="BandHandle.cpp" compile="1" resource="0" file="Source/BandHandle.cpp"/>
       <FILE id="p6BYTV" name="BandHandle.h" compile="0" resource="0" file="Source/BandHandle.h"/>
