@@ -32,8 +32,8 @@ HandleEditor::~HandleEditor()
 //==============================================================================
 void HandleEditor::paint (Graphics& g)
 {
-//    g.setColour (getLookAndFeel().findColour (ResizableWindow::backgroundColourId) );
-//    g.fillRect (getLocalBounds());
+    g.setColour (getLookAndFeel().findColour (ResizableWindow::backgroundColourId) );
+    g.fillRect (getLocalBounds());
 }
 
 //==============================================================================

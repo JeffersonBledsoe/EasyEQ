@@ -2,9 +2,10 @@
 
 #include "JuceHeader.h"
 #include "PluginProcessor.h"
-#include "ControlPanel.h"
 #include "EasyEqLookAndFeel.h"
+#include "ControlPanel.h"
 #include "HandleEditor.h"
+#include "FrequencyResponsePlot.h"
 
 //==============================================================================
 class EasyEqAudioProcessorEditor : public AudioProcessorEditor,
@@ -16,7 +17,6 @@ public:
     ~EasyEqAudioProcessorEditor();
 
     //==========================================================================
-    void paint (Graphics& g) override;
     void resized() override;
 
 private:
@@ -27,11 +27,8 @@ private:
     
     //==========================================================================
     HandleEditor handleEditor;
+    FrequencyResponsePlot frequencyResponsePlot;
     ControlPanel controlPanel;
-    
-    //==========================================================================
-    Path frequencyResponsePlotPath, frequencyResponseHitPath;
-    void updatePlot (const std::vector<double>& frequencies, const std::vector<double>& magnitudes);
     
     //==========================================================================
     void changeListenerCallback (ChangeBroadcaster* broadcaster) override;

@@ -15,6 +15,10 @@
       <FILE id="d62EAY" name="Notch.svg" compile="0" resource="1" file="Assets/ShapeIcons/Notch.svg"/>
     </GROUP>
     <GROUP id="{235C9E8B-B981-66CA-E662-06B71A924845}" name="Source">
+      <FILE id="l1VIUI" name="FrequencyResponsePlot.cpp" compile="1" resource="0"
+            file="Source/FrequencyResponsePlot.cpp"/>
+      <FILE id="a8vOZ6" name="FrequencyResponsePlot.h" compile="0" resource="0"
+            file="Source/FrequencyResponsePlot.h"/>
       <FILE id="t81UFr" name="BandHandle.cpp" compile="1" resource="0" file="Source/BandHandle.cpp"/>
       <FILE id="p6BYTV" name="BandHandle.h" compile="0" resource="0" file="Source/BandHandle.h"/>
       <FILE id="wB4OFg" name="EasyEqLookAndFeel.cpp" compile="1" resource="0"
