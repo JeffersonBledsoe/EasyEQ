@@ -10,29 +10,12 @@ inline String gainToFloat (float value)
     return val.upToFirstOccurrenceOf (".", true, true) + val.fromFirstOccurrenceOf (".", false, true).substring (0, 2);
 }
 
-auto getFilterShapeNameForId (int id)
-{
-    switch (id)
-    {
-        case FilterShape::Bell:            return "Bell";
-        case FilterShape::LowCut:          return "Low Cut";
-        case FilterShape::LowShelf:        return "Low Shelf";
-        case FilterShape::HighShelf:       return "High Shelf";
-        case FilterShape::HighCut:         return "High Cut";
-        case FilterShape::Notch:           return "Notch";
-        case FilterShape::BandPass:        return "Band Pass";
-        default: break;
-    }
-    
-    return "";
-}
-
 StringArray getFilterShapeNames()
 {
     StringArray shapes;
     
-    for (auto i {0}; i < FilterShape::numOfShapes; ++i)
-        shapes.add (getFilterShapeNameForId (i));
+    for (auto i {0}; i < FilterShapes::numOfShapes; ++i)
+        shapes.add (FilterShapes::getFilterShapeNameForId (i));
     
     return shapes;
 }
@@ -205,37 +188,37 @@ void EasyEqAudioProcessor::updateBand (const int bandId)
     
     switch (static_cast<int> (shape))
     {
-        case FilterShape::Bell:
+        case FilterShapes::Bell:
         {
             newCoeffs = dsp::IIR::Coefficients<float>::makePeakFilter (currentSampleRate, frequency, q, gain);
             break;
         }
-        case FilterShape::LowCut:
+        case FilterShapes::LowCut:
         {
             newCoeffs = dsp::IIR::Coefficients<float>::makeHighPass (currentSampleRate, frequency, q);
             break;
         }
-        case FilterShape::LowShelf:
+        case FilterShapes::LowShelf:
         {
             newCoeffs = dsp::IIR::Coefficients<float>::makeLowShelf (currentSampleRate, frequency, q, gain);
             break;
         }
-        case FilterShape::HighShelf:
+        case FilterShapes::HighShelf:
         {
             newCoeffs = dsp::IIR::Coefficients<float>::makeHighShelf (currentSampleRate, frequency, q, gain);
             break;
         }
-        case FilterShape::HighCut:
+        case FilterShapes::HighCut:
         {
             newCoeffs = dsp::IIR::Coefficients<float>::makeLowPass (currentSampleRate, frequency, q);
             break;
         }
-        case FilterShape::Notch:
+        case FilterShapes::Notch:
         {
             newCoeffs = dsp::IIR::Coefficients<float>::makeNotch (currentSampleRate, frequency, q);
             break;
         }
-        case FilterShape::BandPass:
+        case FilterShapes::BandPass:
         {
             newCoeffs = dsp::IIR::Coefficients<float>::makeBandPass (currentSampleRate, frequency, q);
             break;

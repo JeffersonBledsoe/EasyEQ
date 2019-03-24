@@ -7,6 +7,35 @@ using SliderAttachment = AudioProcessorValueTreeState::SliderAttachment;
 using ButtonAttachment = AudioProcessorValueTreeState::ButtonAttachment;
 using ComboBoxAttachment = AudioProcessorValueTreeState::ComboBoxAttachment;
 
+class ShapeSelectPopupItem : public PopupMenu::CustomComponent
+{
+public:
+    ShapeSelectPopupItem (StringRef itemLabel)
+    : itemText (itemLabel)
+    {
+        shapeLabel.setText (itemText, dontSendNotification);
+        addAndMakeVisible (shapeLabel);
+    }
+    
+    void getIdealSize (int& idealWidth, int& idealHeight) override
+    {
+        getLookAndFeel().getIdealPopupMenuItemSize (itemText,
+                                                    false,
+                                                    30, idealWidth, idealHeight);
+    }
+    
+    void resized() override
+    {
+        auto bounds = getLocalBounds();
+        
+        shapeLabel.setBounds (bounds);
+    }
+    
+private:
+    Label shapeLabel;
+    StringRef itemText;
+};
+
 //==============================================================================
 ControlPanelBand::ControlPanelBand (const int id, AudioProcessorValueTreeState& s)
 : bandId (id), state (s)
@@ -27,7 +56,16 @@ ControlPanelBand::ControlPanelBand (const int id, AudioProcessorValueTreeState& 
     gainSlider.setSliderSnapsToMousePosition (false);
     qSlider.setSliderSnapsToMousePosition (false);
     shapeSelector.setText ("No band selected");
-    shapeSelector.addItemList (shapeParam->choices, 1);
+    
+    for (auto i {0}; i < shapeParam->choices.size(); ++i)
+    {
+        PopupMenu::Item item;
+        item.text = shapeParam->choices[i];
+        item.itemID = i + 1;
+        item.customComponent = new ShapeSelectPopupItem (shapeParam->choices[i]);;
+        shapeSelector.getRootMenu()->addItem (item);
+    }
+    
     bypassButton.setButtonText ("Bypass");
     
     frequencyAttachment.reset (new SliderAttachment (state, "frequency_band" + bandIdString, frequencySlider));
@@ -75,6 +113,7 @@ void ControlPanelBand::resized()
 void ControlPanelBand::parameterChanged (const String& parameterId, float newValue)
 {
     DBG ("Parameter Of Changed Control Panel Band: " + parameterId);
+    DBG (newValue);
     if (MessageManager::getInstance()->isThisTheMessageThread())
         update();
     else
@@ -85,9 +124,9 @@ void ControlPanelBand::update()
 {
     const auto shapeParam = dynamic_cast<AudioParameterChoice*> (state.getParameter (ParameterNames::shape + "_band" + String (bandId)));
     
-    if (*shapeParam == FilterShape::Bell)              gainSlider.setEnabled (true);
-    else if (*shapeParam == FilterShape::LowShelf)     gainSlider.setEnabled (true);
-    else if (*shapeParam == FilterShape::HighShelf)    gainSlider.setEnabled (true);
+    if (*shapeParam == FilterShapes::Bell)              gainSlider.setEnabled (true);
+    else if (*shapeParam == FilterShapes::LowShelf)     gainSlider.setEnabled (true);
+    else if (*shapeParam == FilterShapes::HighShelf)    gainSlider.setEnabled (true);
     else
         gainSlider.setEnabled (false);
     

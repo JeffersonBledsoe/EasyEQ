@@ -1,7 +1,6 @@
 #pragma once
 
 #include "JuceHeader.h"
-#include "Utilities.h"
 
 //==============================================================================
 class EasyEqAudioProcessor : public AudioProcessor,

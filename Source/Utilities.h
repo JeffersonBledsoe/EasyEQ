@@ -33,18 +33,39 @@ namespace BandColours
 }
 
 //==============================================================================
-enum FilterShape
+
+namespace FilterShapes
 {
-    Bell = 0,
-    LowCut,
-    LowShelf,
-    HighShelf,
-    HighCut,
-    Notch,
-    BandPass,
+    enum Shape
+    {
+        Bell = 0,
+        LowCut,
+        LowShelf,
+        HighShelf,
+        HighCut,
+        Notch,
+        BandPass,
+        
+        numOfShapes
+    };
     
-    numOfShapes
-};
+    constexpr auto getFilterShapeNameForId (const int id)
+    {
+        switch (id)
+        {
+            case FilterShapes::Bell:            return "Bell";
+            case FilterShapes::LowCut:          return "Low Cut";
+            case FilterShapes::LowShelf:        return "Low Shelf";
+            case FilterShapes::HighShelf:       return "High Shelf";
+            case FilterShapes::HighCut:         return "High Cut";
+            case FilterShapes::Notch:           return "Notch";
+            case FilterShapes::BandPass:        return "Band Pass";
+            default: break;
+        }
+        
+        return "";
+    }
+}
 
 //==============================================================================
 inline float valueToNormalisedFrequency (float value, float min = 20.0f, float max = 20000.0f)
