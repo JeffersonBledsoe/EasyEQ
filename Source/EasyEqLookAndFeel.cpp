@@ -5,6 +5,7 @@ EasyEqLookAndFeel::EasyEqLookAndFeel()
     setColour (DocumentWindow::backgroundColourId, Colour::fromRGB (44, 44, 44));
     setColour (Slider::rotarySliderOutlineColourId, Colours::black.brighter (0.25f));
     setColour (Slider::rotarySliderFillColourId, Colours::white.darker (0.1f));
+    setColour (Slider::trackColourId, Colours::white.darker (0.1f));
     setColour (ComboBox::backgroundColourId, Colours::black.brighter (0.25f));
 }
 
@@ -17,7 +18,7 @@ void EasyEqLookAndFeel::drawLinearSlider (Graphics& g, int x, int y, int width, 
 {
     const auto bounds = Rectangle<int> { x, y, width, height };
     
-    g.setColour (Colours::white);
+    g.setColour (findColour (Slider::trackColourId));
     g.drawText (String (slider.getValue()), bounds, Justification::centred);
 }
 

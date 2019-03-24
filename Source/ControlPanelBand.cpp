@@ -83,11 +83,14 @@ ControlPanelBand::ControlPanelBand (const int id, AudioProcessorValueTreeState& 
     
     bandName.setText ("Band " + bandIdString, dontSendNotification);
     bandName.setJustificationType (Justification::centred);
+    bandName.setColour (Label::textColourId, BandColours::getColourForBand (bandId));
     frequencySlider.setSliderSnapsToMousePosition (false);
+    frequencySlider.setColour (Slider::trackColourId, BandColours::getColourForBand (bandId));
     gainSlider.setSliderSnapsToMousePosition (false);
+    gainSlider.setColour (Slider::trackColourId, BandColours::getColourForBand (bandId));
     qSlider.setSliderSnapsToMousePosition (false);
+    qSlider.setColour (Slider::trackColourId, BandColours::getColourForBand (bandId));
     shapeSelector.setText ("No band selected");
-    
     for (auto i {0}; i < shapeParam->choices.size(); ++i)
     {
         PopupMenu::Item item;
@@ -96,7 +99,7 @@ ControlPanelBand::ControlPanelBand (const int id, AudioProcessorValueTreeState& 
         item.customComponent = new ShapeSelectPopupItem (i, bandId);
         shapeSelector.getRootMenu()->addItem (item);
     }
-    
+    bypassButton.setColour (ToggleButton::textColourId, BandColours::getColourForBand (bandId));
     bypassButton.setButtonText ("Bypass");
     
     frequencyAttachment.reset (new SliderAttachment (state, "frequency_band" + bandIdString, frequencySlider));
@@ -119,12 +122,6 @@ ControlPanelBand::~ControlPanelBand()
 }
 
 //==============================================================================
-void ControlPanelBand::paint (Graphics& g)
-{
-    g.setColour (BandColours::getColourForBand (bandId));
-    g.fillRect (getLocalBounds());
-}
-
 void ControlPanelBand::resized()
 {
     Grid grid;
