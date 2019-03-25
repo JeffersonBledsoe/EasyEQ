@@ -58,7 +58,9 @@ void HandleEditor::updateHandle (int bandId, bool shouldAdd)
         addAndMakeVisible (handles.add (new BandHandle (bandId, state)));
     else
     {
-        handles.remove (bandId);
+        handles.removeObject (*std::find_if (handles.begin(), handles.end(),
+                                             [bandId] (BandHandle* handle) { return handle->getBandId() == bandId; }));
+        
         resized();
     }
 }
