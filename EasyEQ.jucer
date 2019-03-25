@@ -3,7 +3,8 @@
 <JUCERPROJECT id="nkNVLf" name="EasyEQ" projectType="audioplug" jucerVersion="5.4.3"
               companyName="Jefferson Bledsoe" companyWebsite="jeffersonbledsoe.com"
               companyEmail="me@jeffersonbledsoe.com" pluginAAXCategory="1"
-              pluginVST3Category="EQ" pluginRTASCategory="1" pluginFormats="buildAU,buildStandalone,buildVST3">
+              pluginVST3Category="EQ" pluginRTASCategory="1" pluginFormats="buildAU,buildStandalone,buildVST3"
+              cppLanguageStandard="17">
   <MAINGROUP id="XZuJSb" name="EasyEQ">
     <GROUP id="{AC6694C7-179A-2294-9156-6D0FC606603D}" name="Assets">
       <FILE id="OLhTf4" name="BandPass.svg" compile="0" resource="1" file="Assets/ShapeIcons/BandPass.svg"/>

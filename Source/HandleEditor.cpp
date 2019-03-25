@@ -11,15 +11,8 @@ HandleEditor::HandleEditor (AudioProcessorValueTreeState& s)
         const auto bandEnabledParameterName = ParameterNames::enabled + "_band" + std::to_string (i);
         state.addParameterListener (bandEnabledParameterName, this);
         
-        auto enabledParam = static_cast<AudioParameterBool*> (state.getParameter (bandEnabledParameterName));
-        
-        if (*enabledParam == true)
-        {
-            auto* handle = handles.add (new BandHandle (i, state));
-            addAndMakeVisible (handle);
-            handle->addMouseListener (this, true);
-            resized();
-        }
+        if (*dynamic_cast<AudioParameterBool*> (state.getParameter (bandEnabledParameterName)) == true)
+            addAndMakeVisible (handles.add (new BandHandle (i, state)));
     }
 }
 
@@ -32,8 +25,7 @@ HandleEditor::~HandleEditor()
 //==============================================================================
 void HandleEditor::paint (Graphics& g)
 {
-    g.setColour (getLookAndFeel().findColour (ResizableWindow::backgroundColourId) );
-    g.fillRect (getLocalBounds());
+    
 }
 
 //==============================================================================
@@ -68,7 +60,7 @@ void HandleEditor::updateHandle (int bandId, bool shouldAdd)
 //==============================================================================
 void HandleEditor::mouseDown (const MouseEvent& event)
 {
-    mouseDownPosition = event.getEventRelativeTo (this).position;
+    mouseDownPosition = event.position;
 }
 
 void HandleEditor::mouseDoubleClick (const MouseEvent& event)
@@ -79,15 +71,8 @@ void HandleEditor::mouseDoubleClick (const MouseEvent& event)
     for (auto i {0}; i < 8; ++i)
     {
         const auto enabledParamName = ParameterNames::enabled + "_band" + std::to_string (i);
-        auto enabledParam = dynamic_cast<AudioParameterBool*> (state.getParameter (enabledParamName));
         
-        if (enabledParam == nullptr)
-        {
-            DBG ("Invalid enabled parameter");
-            return;
-        }
-        
-        if (*enabledParam == false)
+        if (auto* enabledParam = dynamic_cast<AudioParameterBool*> (state.getParameter (enabledParamName)); *enabledParam == false)
         {
             enabledParam->setValueNotifyingHost (true);
             

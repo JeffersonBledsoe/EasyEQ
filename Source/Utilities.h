@@ -14,7 +14,7 @@ namespace ParameterNames
 
 namespace BandColours
 {
-    static inline Colour getColourForBand (const int bandId)
+    inline Colour getColourForBand (const int bandId) noexcept
     {
         if (bandId == 0)              return Colour::fromRGB (222, 75, 248);
         else if (bandId == 1)         return Colour::fromRGB (241, 228, 166);

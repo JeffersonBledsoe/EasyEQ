@@ -140,8 +140,6 @@ void ControlPanelBand::resized()
 //==============================================================================
 void ControlPanelBand::parameterChanged (const String& parameterId, float newValue)
 {
-    DBG ("Parameter Of Changed Control Panel Band: " + parameterId);
-    DBG (newValue);
     if (MessageManager::getInstance()->isThisTheMessageThread())
         update();
     else

@@ -10,8 +10,8 @@ EasyEqAudioProcessorEditor::EasyEqAudioProcessorEditor (EasyEqAudioProcessor& p,
     processor.addChangeListener (this);
     setLookAndFeel (&laf);
 
-    addAndMakeVisible (handleEditor);
     addAndMakeVisible (frequencyResponsePlot);
+    addAndMakeVisible (handleEditor);
     addAndMakeVisible (controlPanel);
     
     setSize (1000, 600);
@@ -29,8 +29,8 @@ void EasyEqAudioProcessorEditor::resized()
 {
     auto bounds = getLocalBounds();
     
-    handleEditor.setBounds (bounds.removeFromTop (proportionOfHeight (0.8f)));
-    frequencyResponsePlot.setBounds (handleEditor.getBounds());
+    frequencyResponsePlot.setBounds (bounds.removeFromTop (proportionOfHeight (0.8f)));
+    handleEditor.setBounds (frequencyResponsePlot.getLocalBounds());
     controlPanel.setBounds (bounds);
 }
 
