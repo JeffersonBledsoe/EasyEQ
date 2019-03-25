@@ -26,7 +26,7 @@ BandHandle::BandHandle (const int id, AudioProcessorValueTreeState& s)
     state.addParameterListener ("shape_band" + bandNumber, this);
     state.addParameterListener ("bypass_band" + bandNumber, this);
     
-    setSize (20, 20);
+    setSize (22, 22);
     
     startTimerHz (30);
 }
@@ -72,11 +72,16 @@ void BandHandle::update()
 //==============================================================================
 void BandHandle::paint (Graphics& g)
 {
+    Path circle;
+    circle.addEllipse (getLocalBounds().reduced (2).toFloat());
+    
+    DropShadow (Colours::black, 1, {}).drawForPath (g, circle);
+    
     ColourGradient fillGradient (Colours::black.brighter (0.6f), Point<float> (getLocalBounds().getCentreX(), 0),
                                  colour, Point<float> (getLocalBounds().getCentreX(), getHeight()),
                                  false);
     g.setGradientFill (fillGradient);
-    g.fillEllipse (getLocalBounds().toFloat());
+    g.fillPath (circle);
     
     g.setColour (Colours::white);
     g.drawText (String (bandId), getLocalBounds(), Justification::centred);

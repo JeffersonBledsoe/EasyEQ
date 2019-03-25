@@ -39,6 +39,9 @@ void FrequencyResponsePlot::updatePlot (const std::vector<double>& frequencies, 
 //==============================================================================
 void FrequencyResponsePlot::paint (Graphics& g)
 {
+    g.setColour (getLookAndFeel().findColour (ResizableWindow::backgroundColourId) );
+    g.fillRect (getLocalBounds());
+    
     g.setColour (Colour::fromRGB (235, 235, 235));
     g.fillPath (frequencyResponsePlotPath);
     
