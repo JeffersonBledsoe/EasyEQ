@@ -7,3 +7,5 @@ A simple free and open-source equaliser plugin. Built around JUCE classes and co
 - Simple graph-based GUI for quick equalisation setting
 - Mac and Windows support
 - VST3 and AU support (AAX upcoming)
+
+![Pre-Alpha Screenshot](Design/PreAlphaScreenshot.png)
