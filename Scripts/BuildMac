@@ -1,0 +1,60 @@
+#!/bin/sh -e
+
+ROOT=$(cd "$(dirname "$0")/.."; pwd)
+DEPLOYMENT_DIR="$ROOT/Deploy"
+PROJECT_NAME="EasyEQ"
+
+create_juce_project () {
+    echo "Building Projucer and creating project"
+    pushd ${ROOT}/JUCE/extras/Projucer/Builds/MacOSX
+    xcodebuild -configuration "Release" GCC_PREPROCESSOR_DEFINITIONS='$(inherited) JUCER_ENABLE_GPL_MODE=1'
+    popd
+
+    cd $ROOT/$PROJECT_NAME
+    ${ROOT}/JUCE/extras/Projucer/Builds/MacOSX/build/Release/Projucer.app/Contents/MacOS/Projucer --resave "$ROOT/$PROJECT_NAME/$PROJECT_NAME.jucer"
+}
+
+build_project () {
+    echo "Building Xcode project"
+    cd $ROOT/$PROJECT_NAME/Builds/MacOSX
+    xcodebuild -configuration Release clean
+    xcodebuild -configuration Release
+}
+
+copy_app_to_deployment_directory () {
+    APP_NAME=$PROJECT_NAME".app"
+    APP_DIR=$ROOT/$PROJECT_NAME/Builds/MacOSX/build/Release/
+    APP_FILE=$APP_DIR/$APP_NAME
+    ZIP_NAME="$PROJECT_NAME"_macOS.zip
+
+    echo "Copying project to deployment directory"
+    cd $ROOT
+    
+    echo "\nDeploying to: " $DEPLOYMENT_DIR
+    cd "$APP_DIR"
+    pwd
+    ls -al
+    echo $APP_NAME
+    echo $DEPLOYMENT_DIR
+    echo $ZIP_NAME
+    echo "$DEPLOYMENT_DIR/$ZIP_NAME"
+    zip -r "$DEPLOYMENT_DIR/$ZIP_NAME" "$APP_NAME"
+}
+
+
+echo "Building all projects"
+rm -rf $DEPLOYMENT_DIR
+mkdir -p "$DEPLOYMENT_DIR"
+
+echo "Creating $PROJECT_NAME"
+APP_DIR=$ROOT/$PROJECT_NAME/Builds/MacOSX/build/Release/    
+
+echo "1"
+create_juce_project $PROJECT_NAME
+
+echo "2"
+build_project $PROJECT_NAME
+
+echo "3"
+copy_app_to_deployment_directory $PROJECT_NAME
+done
