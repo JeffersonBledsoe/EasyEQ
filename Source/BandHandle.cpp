@@ -63,7 +63,13 @@ void BandHandle::update()
     jassert (MessageManager::getInstance()->isThisTheMessageThread());
     
     const auto x = valueToNormalisedFrequency (*frequencyParam) * getParentWidth();
-    const auto y = (1.0f - gainParam->getNormalisableRange().convertTo0to1 (*gainParam)) * getParentHeight();
+    auto y = (1.0f - gainParam->getNormalisableRange().convertTo0to1 (*gainParam)) * getParentHeight();
+    
+    if (shapeParam->getCurrentChoiceName().equalsIgnoreCase (getFilterShapeNameForId (FilterShapes::LowShelf))
+        || shapeParam->getCurrentChoiceName().equalsIgnoreCase (getFilterShapeNameForId (FilterShapes::HighShelf)))
+    {
+        y = y * 0.5f + (getParentHeight() * 0.25f);
+    }
     
     setCentrePosition (x, y);
     needsUpdate.store (false);
