@@ -11,6 +11,8 @@ juce_add_plugin(EasyEQ
     # ICON_BIG MyIconBig
     # ICON_SMALL MyIconSmall
     COMPANY_NAME Jefferson Bledsoe
+    COMPANY_WEBSITE jeffersonbledsoe.com
+    COMPANY_EMAIL me@jeffersonbledsoe.com
     IS_SYNTH FALSE
     NEEDS_MIDI_INPUT FALSE
     NEEDS_MIDI_OUTPUT FALSE
@@ -23,6 +25,8 @@ juce_add_plugin(EasyEQ
     PRODUCT_NAME "EasyEQ"
     MICROPHONE_PERMISSION_ENABLED TRUE
 )
+
+set_property(TARGET EasyEQ PROPERTY CXX_STANDARD 17)
 
 # Need this until we move to individually including needed module headers
 juce_generate_juce_header(EasyEQ)
