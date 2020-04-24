@@ -181,10 +181,10 @@ void EasyEqAudioProcessor::updateBand (const int bandId)
     dsp::IIR::Coefficients<float>::Ptr newCoeffs;
     
     const auto bandNumber = std::to_string (bandId);
-    const auto frequency = *state.getRawParameterValue (ParameterNames::frequency + "_band" + bandNumber);
-    const auto gain = Decibels::decibelsToGain (*state.getRawParameterValue (ParameterNames::gain + "_band" + bandNumber));
-    const auto q = *state.getRawParameterValue (ParameterNames::q + "_band" + bandNumber);
-    const auto shape = *state.getRawParameterValue (ParameterNames::shape + "_band" + bandNumber);
+    const auto frequency = state.getRawParameterValue (ParameterNames::frequency + "_band" + bandNumber)->load();
+    const auto gain = Decibels::decibelsToGain (state.getRawParameterValue (ParameterNames::gain + "_band" + bandNumber)->load());
+    const auto q = state.getRawParameterValue (ParameterNames::q + "_band" + bandNumber)->load();
+    const auto shape = state.getRawParameterValue (ParameterNames::shape + "_band" + bandNumber)->load();
     
     switch (static_cast<int> (shape))
     {
